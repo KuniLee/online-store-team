@@ -55,6 +55,7 @@ const sccLoaders = extra => {
     if (extra) {
         loaders.push(extra)
     }
+    loaders.push('postcss-loader')
     return loaders
 }
 

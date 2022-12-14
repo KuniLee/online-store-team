@@ -1,3 +1,5 @@
+import './style.scss';
+
 import { Test } from 'types/interfaces'
 
 let x: Test
