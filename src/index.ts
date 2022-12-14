@@ -1,9 +1,14 @@
-import {Test} from 'types/interfaces'
-
+import { Test } from 'types/interfaces'
 
 let x: Test
 x = {
-    test: 'kek'
+    test: 'kek',
 }
 console.log('Hello online')
+console.log(x)
+
+x = {
+    test: 'lol',
+}
+
 console.log(x)
