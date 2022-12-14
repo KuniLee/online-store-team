@@ -1,18 +1,18 @@
-const path = require("path")
+const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
-const {CleanWebpackPlugin} = require("clean-webpack-plugin")
-const MiniCssExtractPlugin = require("mini-css-extract-plugin")
-const TerserPlugin = require("terser-webpack-plugin")
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin")
-const ESLintPlugin = require("eslint-webpack-plugin")
+const {CleanWebpackPlugin} = require('clean-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
 
-const devMode = process.env.NODE_ENV !== "production"
+const devMode = process.env.NODE_ENV !== 'production'
 
 const optimization = () => {
     const config = {
         runtimeChunk: devMode ? 'single' : false,
         splitChunks: {
-            chunks: "all"
+            chunks: 'all'
         },
         minimize: false
     }
@@ -31,14 +31,14 @@ const thePlugins = () => {
         new HTMLWebpackPlugin({
             inject: true,
             // favicon: `./src/assets/images/favicon.ico`,
-            template: "index.html",
+            template: 'index.html',
             filename: `index.html`,
             minify: !devMode,
-            chunks: ["main"],
+            chunks: ['main'],
         }),
         new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({
-            filename: "[name].[contenthash].css",
+            filename: '[name].[contenthash].css',
         }),
         new ESLintPlugin(),
 
@@ -51,7 +51,7 @@ const thePlugins = () => {
 }
 
 const sccLoaders = extra => {
-    const loaders = [MiniCssExtractPlugin.loader, "css-loader"]
+    const loaders = [MiniCssExtractPlugin.loader, 'css-loader']
     if (extra) {
         loaders.push(extra)
     }
@@ -59,30 +59,26 @@ const sccLoaders = extra => {
 }
 
 const config = {
-    context: path.resolve(__dirname, "src"),
-    mode: "development",
+    context: path.resolve(__dirname, 'src'),
+    mode: 'development',
     entry: {
-        main: "./index.ts",
+        main: './index.ts',
     },
     output: {
-        filename: "[name].[contenthash].js",
-        path: path.resolve(__dirname, "dist"),
+        filename: '[name].[contenthash].js',
+        path: path.resolve(__dirname, 'dist'),
         assetModuleFilename: 'assets/[hash][ext][query]',
     },
     resolve: {
-        extensions: [".js", '.ts'],
+        extensions: ['.js', '.ts'],
         alias: {
-            "@images": path.resolve(__dirname, './src/assets/images'),
-            "@icons": path.resolve(__dirname, './src/assets/icons'),
-            "@media": path.resolve(__dirname, './src/assets/media'),
-            "@templates": path.resolve(__dirname, './src/assets/templates'),
-            "@scripts": path.resolve(__dirname, './src/assets/scripts'),
-            "@": path.resolve(__dirname, './src'),
+            '@': path.resolve(__dirname, 'src'),
+            'types': path.resolve(__dirname, 'src/types'),
         },
     },
     optimization: optimization(),
     plugins: thePlugins(),
-    devtool: devMode ? "source-map" : false,
+    devtool: devMode ? 'source-map' : false,
     module: {
         rules: [
             {
@@ -96,7 +92,7 @@ const config = {
             },
             {
                 test: /\.s[ac]ss$/,
-                use: sccLoaders("sass-loader"),
+                use: sccLoaders('sass-loader'),
                 exclude: /node_modules/,
             },
             {
@@ -109,7 +105,7 @@ const config = {
             },
             {
                 test: /\.html$/i,
-                loader: "html-loader",
+                loader: 'html-loader',
             },
             {
                 test: /\.(woff(2)?|eot|ttf|otf|svg|)$/,
