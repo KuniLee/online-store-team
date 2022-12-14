@@ -24,5 +24,12 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
+      - name: Install
+        run: npm install
+
       - name: Lint
-        run: npm run lint
+        run: |
+          npm install eslint
+          npm run lint
+          
+          
