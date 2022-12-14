@@ -1,9 +1,0 @@
-{
-  "rules": {
-   "no-unused-vars": "warn"
-  },
-  "parserOptions": {
-    "sourceType": "module",
-    "ecmaVersion": "latest"
-  }
-}
