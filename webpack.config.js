@@ -38,7 +38,7 @@ const thePlugins = () => {
         new MiniCssExtractPlugin({
             filename: '[name].[contenthash].css',
         }),
-        new ESLintPlugin(),
+        new ESLintPlugin({ extensions: ['ts', 'js'] }),
         new Dotenv(),
     ]
 }
