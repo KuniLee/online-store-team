@@ -13,4 +13,4 @@ x = {
     test: 'lol',
 }
 
-console.log(x)
+console.log(process.env.API_KEY)

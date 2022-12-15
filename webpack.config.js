@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
+const Dotenv = require('dotenv-webpack')
 
 const devMode = process.env.NODE_ENV !== 'production'
 
@@ -38,6 +39,7 @@ const thePlugins = () => {
             filename: '[name].[contenthash].css',
         }),
         new ESLintPlugin(),
+        new Dotenv(),
     ]
 }
 
