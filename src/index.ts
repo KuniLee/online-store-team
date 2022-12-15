@@ -1,4 +1,4 @@
-import './style.scss'
+import '@/styles/style.css'
 
 import { Test } from 'types/interfaces'
 
