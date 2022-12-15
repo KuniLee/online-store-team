@@ -6,6 +6,9 @@ module.exports = {
             colors: {
                 primary: '#a1b9de',
             },
+            transitionDuration: {
+                DEFAULT: '400ms',
+            },
         },
     },
     plugins: [],
