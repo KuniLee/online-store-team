@@ -26,7 +26,7 @@ export async function getProducts() {
             console.log(brand)
             console.log(stock)
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error while fetching Products', error)
     }
 }
