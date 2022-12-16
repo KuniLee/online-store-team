@@ -1,0 +1,10 @@
+@tailwind base;
+body {
+    @apply p-2;
+    @apply m-auto;
+}
+
+h1 {
+    @apply text-2xl;
+    @apply mb-1;
+}
