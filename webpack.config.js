@@ -1,10 +1,11 @@
 const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
-const {CleanWebpackPlugin} = require('clean-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
+const Dotenv = require('dotenv-webpack')
 
 const devMode = process.env.NODE_ENV !== 'production'
 
@@ -12,16 +13,13 @@ const optimization = () => {
     const config = {
         runtimeChunk: devMode ? 'single' : false,
         splitChunks: {
-            chunks: 'all'
+            chunks: 'all',
         },
-        minimize: false
+        minimize: false,
     }
     if (!devMode) {
         config.minimize = true
-        config.minimizer = [
-            new TerserPlugin(),
-            new CssMinimizerPlugin(),
-        ]
+        config.minimizer = [new TerserPlugin(), new CssMinimizerPlugin()]
     }
     return config
 }
@@ -40,22 +38,16 @@ const thePlugins = () => {
         new MiniCssExtractPlugin({
             filename: '[name].[contenthash].css',
         }),
-        new ESLintPlugin(),
-
+        new ESLintPlugin({ extensions: ['ts', 'js'] }),
+        new Dotenv(),
     ]
-    // if (!devMode){
-    //     base.push( new BundleAnalyzerPlugin())
-    // }
-
-
 }
 
-const sccLoaders = extra => {
+const sccLoaders = (extra) => {
     const loaders = [MiniCssExtractPlugin.loader, 'css-loader']
     if (extra) {
         loaders.push(extra)
     }
-    loaders.push('postcss-loader')
     return loaders
 }
 
@@ -74,7 +66,7 @@ const config = {
         extensions: ['.js', '.ts'],
         alias: {
             '@': path.resolve(__dirname, 'src'),
-            'types': path.resolve(__dirname, 'src/types'),
+            types: path.resolve(__dirname, 'src/types'),
         },
     },
     optimization: optimization(),
@@ -88,17 +80,12 @@ const config = {
             },
             {
                 test: /\.css$/,
-                use: sccLoaders(),
-                exclude: /node_modules/,
-            },
-            {
-                test: /\.s[ac]ss$/,
-                use: sccLoaders('sass-loader'),
+                use: sccLoaders('postcss-loader'),
                 exclude: /node_modules/,
             },
             {
                 test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
-                type: 'asset/resource'
+                type: 'asset/resource',
             },
             {
                 test: /\.(png|svg|jpg|jpeg|gif|ogg|mp3|wav)$/i,
@@ -115,15 +102,15 @@ const config = {
             {
                 test: /\.(csv|tsv)$/,
                 use: ['csv-loader'],
-            }]
+            },
+        ],
     },
     devServer: {
         static: path.join(__dirname, ''),
         port: 4200,
         compress: true,
         open: true,
-    }
+    },
 }
-
 
 module.exports = config

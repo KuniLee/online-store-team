@@ -1,6 +1,7 @@
 import './styles/styles.scss'
 
 import { Test } from 'types/interfaces'
+import { getProducts } from '@/utils/loader'
 
 let x: Test
 x = {
@@ -13,4 +14,4 @@ x = {
     test: 'lol',
 }
 
-console.log(x)
+getProducts()
