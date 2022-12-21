@@ -18,9 +18,11 @@
         "node": true
     },
     "rules": {
+        "no-unused-vars": "off",
         "no-debugger": "off",
         "no-console": 0,
         "class-methods-use-this": "off",
-        "@typescript-eslint/no-explicit-any": "error"
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/no-unused-vars": "off"
     }
 }
