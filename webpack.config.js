@@ -104,7 +104,7 @@ const config = {
                 use: ['csv-loader'],
             },
             {
-                test: /\.handlebars$/,
+                test: /\.hbs$/,
                 loader: 'handlebars-loader',
             },
         ],

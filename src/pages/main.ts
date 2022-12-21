@@ -2,7 +2,7 @@ import type { Location } from 'history'
 // import { ItemsModel } from '@/components/models/model'
 // import { ItemsView } from '@/components/views/view'
 // import { ItemsController } from '@/components/controllers/controller'
-import footer from '@/templates/footer.handlebars'
+import footer from '@/templates/footer.hbs'
 import mainTemplate from '@/templates/mainpage.html'
 import header from '@/templates/header.html'
 
