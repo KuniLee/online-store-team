@@ -14,7 +14,7 @@ const PATHS = {
     notFound: '/404',
 }
 
-const ROUTES: Record<typeof PATHS[keyof typeof PATHS], (location: Location) => HTMLDivElement> = {
+const ROUTES: Record<typeof PATHS[keyof typeof PATHS], (location: Location) => DocumentFragment> = {
     [PATHS.root]: Main,
     // [PATHS.item]: Item,
     [PATHS.notFound]: NotFound,

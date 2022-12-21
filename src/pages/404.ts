@@ -1,7 +1,7 @@
 export function NotFound() {
-    const div = document.createElement('div')
-
-    div.innerText = 'Not found'
-
-    return div
+    const div = document.createElement('template')
+    const h1 = document.createElement('h1')
+    h1.innerText = 'Not found'
+    div.append(h1)
+    return div.content
 }
