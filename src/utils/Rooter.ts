@@ -1,22 +1,22 @@
 import { createBrowserHistory } from 'history'
 import type { Location } from 'history'
 
-import { Main } from '@/pages/main'
-import { NotFound } from '@/pages/404'
 import EventEmitter from 'events'
 
 type RouterEventsName = 'ROUTE'
 
 const history = createBrowserHistory()
 
-const PATHS = {
-    catalog: '/',
-    item: '/item',
-    notFound: '/404',
-    cart: '/cart',
+enum PATHS {
+    catalog = '/',
+    item = '/item',
+    notFound = '/404',
+    cart = '/cart',
 }
 
-const ROUTES: Record<typeof PATHS[keyof typeof PATHS], keyof typeof PATHS> = {
+type Pages = keyof typeof PATHS
+
+const ROUTES: Record<typeof PATHS[Pages], Pages> = {
     [PATHS.catalog]: 'catalog',
     [PATHS.item]: 'item',
     [PATHS.cart]: 'cart',
@@ -44,9 +44,6 @@ export class Router extends EventEmitter {
     }
 
     push(path: string) {
-        history.push(path)
-    }
-    goToItem(path: string) {
         history.push(path)
     }
 
