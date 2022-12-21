@@ -1,7 +1,6 @@
 @tailwind base;
 body {
-    @apply p-2;
-    @apply m-auto;
+    @apply flex min-h-screen flex-col p-0;
 }
 
 h1 {

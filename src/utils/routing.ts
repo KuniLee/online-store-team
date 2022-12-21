@@ -6,8 +6,6 @@ import { NotFound } from '@/pages/404'
 
 const history = createBrowserHistory()
 
-const main = document.querySelector('#app')
-
 const PATHS = {
     root: '/',
     //  item: '/item',
@@ -23,9 +21,9 @@ const ROUTES: Record<typeof PATHS[keyof typeof PATHS], (location: Location) => D
 function processRoutes(location: Location) {
     const route = ROUTES[location.pathname]
 
-    if (route && main) {
-        main.innerHTML = ''
-        main.appendChild(route(location))
+    if (route) {
+        document.body.innerHTML = ''
+        document.body.appendChild(route(location))
     } else {
         history.push(PATHS.notFound)
     }
