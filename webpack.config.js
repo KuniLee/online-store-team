@@ -103,6 +103,10 @@ const config = {
                 test: /\.(csv|tsv)$/,
                 use: ['csv-loader'],
             },
+            {
+                test: /\.handlebars$/,
+                loader: 'handlebars-loader',
+            },
         ],
     },
     devServer: {

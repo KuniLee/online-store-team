@@ -2,8 +2,8 @@ import type { Location } from 'history'
 // import { ItemsModel } from '@/components/models/model'
 // import { ItemsView } from '@/components/views/view'
 // import { ItemsController } from '@/components/controllers/controller'
+import footer from '@/templates/footer.handlebars'
 import mainTemplate from '@/templates/mainpage.html'
-import footer from '@/templates/footer.html'
 import header from '@/templates/header.html'
 
 export function Main(location: Location) {
@@ -16,7 +16,10 @@ export function Main(location: Location) {
     // const Controller = new ItemsController(Model, View)
 
     fragment.innerHTML = mainTemplate
-    fragmentFooter.innerHTML = footer
+    fragmentFooter.innerHTML = footer({
+        year: new Date().getFullYear(),
+        img: require('@/assets/images/rs_school_js.svg'),
+    })
     fragmentHeader.innerHTML = header
     fragment.content.append(fragmentFooter.content)
     fragment.content.prepend(fragmentHeader.content)
