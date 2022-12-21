@@ -1,0 +1,24 @@
+@import './styles/fonts';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply box-border;
+}
+
+.link-2 {
+  @apply font-HelveticaNeueCyr font-[550] text-[32px] leading-snug text-black;
+}
+
+.wrapper {
+  @apply max-w-[1200px] mx-auto my-0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
+.header {
+  @apply w-full outline-cyan-500;
+  @extend .link-2;
+}
+

@@ -103,6 +103,10 @@ const config = {
                 test: /\.(csv|tsv)$/,
                 use: ['csv-loader'],
             },
+            {
+                test: /\.hbs$/,
+                loader: 'handlebars-loader',
+            },
         ],
     },
     devServer: {
@@ -110,6 +114,7 @@ const config = {
         port: 4200,
         compress: true,
         open: true,
+        historyApiFallback: true,
     },
 }
 
