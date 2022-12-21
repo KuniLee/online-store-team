@@ -1,7 +1,7 @@
 import { createBrowserHistory } from 'history'
 import type { Location } from 'history'
 
-import { Root } from '@/pages/root'
+import { Main } from '@/pages/main'
 import { NotFound } from '@/pages/404'
 
 const history = createBrowserHistory()
@@ -15,7 +15,7 @@ const PATHS = {
 }
 
 const ROUTES: Record<typeof PATHS[keyof typeof PATHS], (location: Location) => HTMLDivElement> = {
-    [PATHS.root]: Root,
+    [PATHS.root]: Main,
     // [PATHS.item]: Item,
     [PATHS.notFound]: NotFound,
 }
