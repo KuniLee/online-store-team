@@ -2,13 +2,10 @@
 module.exports = {
     content: ['./src/**/*.{html,js,ts}'],
     theme: {
-        extend: {
-            colors: {
-                primary: '#a1b9de',
-            },
-            transitionDuration: {
-                DEFAULT: '400ms',
-            },
+        extend: {},
+        fontFamily: {
+            'HelveticaNeueCyr': ['HelveticaNeueCyr', 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+            'Arial': ['Arial', 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
         },
     },
     plugins: [],
