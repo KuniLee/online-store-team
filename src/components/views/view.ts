@@ -1,5 +1,4 @@
 import EventEmitter from 'events'
-import { AppModel } from '../models/model'
 import type { AppModelInstance } from '../models/model'
 
 type ItemViewEventsName = 'ITEM_BUTTON_CLICK'
