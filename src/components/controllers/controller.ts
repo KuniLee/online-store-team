@@ -7,8 +7,9 @@ export class AppController {
         this.model = model
         this.view = view
         this.router = router
-        router.on('ROUTE', (location) => {
+        router.on('ROUTE', (location, args) => {
             console.log('route to ', location)
+            if (location === 'item') console.log('args', args)
         })
         view.on('ITEM_BUTTON_CLICK', this.addItem)
         router.init()
