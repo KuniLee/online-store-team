@@ -5,10 +5,10 @@ type Item = {
     name: string
 }
 
-type ItemModelEventsName = 'ITEM_ADD' | 'ITEM_REMOVE'
-export type ItemsModelInstance = InstanceType<typeof ItemsModel>
+type AppModelEventsName = 'ITEM_ADD' | 'ITEM_REMOVE'
+export type AppModelInstance = InstanceType<typeof AppModel>
 
-export class ItemsModel extends EventEmitter {
+export class AppModel extends EventEmitter {
     constructor(items?: Item[]) {
         super()
         this.items = items || []
@@ -16,11 +16,11 @@ export class ItemsModel extends EventEmitter {
 
     private items: Item[]
 
-    emit(event: ItemModelEventsName, data?: object | string) {
+    emit(event: AppModelEventsName, data?: object | string) {
         return super.emit(event)
     }
 
-    on(event: ItemModelEventsName, callback: () => void) {
+    on(event: AppModelEventsName, callback: () => void) {
         return super.on(event, callback)
     }
 

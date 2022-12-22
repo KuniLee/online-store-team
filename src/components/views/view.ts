@@ -1,18 +1,13 @@
 import EventEmitter from 'events'
-import { ItemsModel } from '../models/model'
-import type { ItemsModelInstance } from '../models/model'
+import { AppModel } from '../models/model'
+import type { AppModelInstance } from '../models/model'
 
 type ItemViewEventsName = 'ITEM_BUTTON_CLICK'
 
-export type ItemsViewInstance = InstanceType<typeof ItemsView>
+export type AppViewInstance = InstanceType<typeof AppView>
 
-type ItemsViewElements = {
-    container: HTMLDivElement
-    button: HTMLButtonElement
-}
-
-export class ItemsView extends EventEmitter {
-    constructor(model: ItemsModelInstance, appContainer: Element) {
+export class AppView extends EventEmitter {
+    constructor(model: AppModelInstance, appContainer: HTMLElement) {
         super()
 
         this.model = model
@@ -26,7 +21,7 @@ export class ItemsView extends EventEmitter {
         // })
     }
 
-    private model: ItemsModelInstance
+    private model: AppModelInstance
     private elements?: Record<string, HTMLElement>
 
     emit(event: ItemViewEventsName) {
