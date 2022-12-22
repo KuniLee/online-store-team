@@ -60,6 +60,7 @@ const config = {
     output: {
         filename: '[name].[contenthash].js',
         path: path.resolve(__dirname, 'dist'),
+        publicPath: '/',
         assetModuleFilename: 'assets/[hash][ext][query]',
     },
     resolve: {
