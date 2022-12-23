@@ -2,28 +2,27 @@ import EventEmitter from 'events'
 import type { AppModelInstance } from '../models/model'
 import headerTemplate from '@/templates/header.html'
 import footer from '@/templates/footer.hbs'
-import header from '@/templates/header.html'
+import notFoundTemplate from '@/templates/error_404.html'
 
-type ItemViewEventsName = 'ITEM_BUTTON_CLICK'
+type ItemViewEventsName = 'CART_BUTTON_CLICK' | 'LOGO_CLICK'
 
 export type AppViewInstance = InstanceType<typeof AppView>
 
 export class AppView extends EventEmitter {
     private container: HTMLElement
     private model: AppModelInstance
-    private elements?: Record<string, HTMLElement>
+    private readonly mainPageContainer: HTMLElement
 
     constructor(model: AppModelInstance, appContainer: HTMLElement) {
         super()
         this.model = model
         this.container = appContainer
-        // this.elements = elements
-        model.on('ITEM_ADD', this.rebuildList)
-        model.on('ITEM_REMOVE', this.rebuildList)
+        this.mainPageContainer = document.createElement('main')
+        this.mainPageContainer.className = 'flex-grow flex-auto'
 
-        // elements.button.addEventListener('click', () => {
-        //     this.emit('ITEM_BUTTON_CLICK')
-        // })
+        model.on('CHANGE_PAGE', (page) => {
+            if (page === 'notFound') this.load404page()
+        })
     }
 
     emit(event: ItemViewEventsName) {
@@ -34,30 +33,35 @@ export class AppView extends EventEmitter {
         return super.on(event, callback)
     }
 
+    addListeners() {
+        this.container.querySelector('.cart-button')?.addEventListener('click', () => {
+            this.emit('CART_BUTTON_CLICK')
+        })
+        this.container.querySelector('.header__top-logo')?.addEventListener('click', () => {
+            this.emit('LOGO_CLICK')
+        })
+    }
+
     buildApp() {
         const fragment = document.createElement('template')
         const fragmentFooter = document.createElement('template')
         const fragmentHeader = document.createElement('template')
-        fragment.innerHTML = '<main class="flex-grow"></main>'
+
         fragmentFooter.innerHTML = footer({
             year: new Date().getFullYear(),
             img: require('@/assets/images/rs_school_js.svg'),
         })
         fragmentHeader.innerHTML = headerTemplate
-        fragment.content.append(fragmentFooter.content)
+        fragment.content.append(this.mainPageContainer, fragmentFooter.content)
         fragment.content.prepend(fragmentHeader.content)
         this.container.append(fragment.content)
+
+        this.addListeners()
+
+        return this.mainPageContainer
     }
 
-    rebuildList = () => {
-        if (this.elements?.container) {
-            const div = document.createElement('div')
-
-            div.innerText = this.model
-                .getItems()
-                .map((item) => item.id)
-                .join(' ')
-            this.elements.container.appendChild(div)
-        }
+    private load404page() {
+        this.mainPageContainer.innerHTML = notFoundTemplate
     }
 }
