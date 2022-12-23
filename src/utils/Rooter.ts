@@ -7,14 +7,14 @@ type RouterEventsName = 'ROUTE'
 
 const history = createBrowserHistory()
 
-enum PATHS {
+export enum PATHS {
     catalog = '/',
     item = '/item',
     notFound = '/404',
     cart = '/cart',
 }
 
-type Pages = keyof typeof PATHS
+export type Pages = keyof typeof PATHS
 
 const ROUTES: Record<typeof PATHS[Pages], Pages> = {
     [PATHS.catalog]: 'catalog',
