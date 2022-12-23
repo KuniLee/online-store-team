@@ -1,40 +1,26 @@
 import EventEmitter from 'events'
+import { Pages } from '@/utils/Rooter'
 
-type Item = {
-    id: string
-    name: string
-}
-
-type AppModelEventsName = 'ITEM_ADD' | 'ITEM_REMOVE'
+type AppModelEventsName = 'CHANGE_PAGE' | 'ITEM_REMOVE'
 export type AppModelInstance = InstanceType<typeof AppModel>
 
 export class AppModel extends EventEmitter {
-    constructor(items?: Item[]) {
+    private currentPage: Pages | undefined
+
+    constructor() {
         super()
-        this.items = items || []
     }
 
-    private items: Item[]
+    changePage(page: Pages, args?: string) {
+        this.currentPage = page
+        this.emit('CHANGE_PAGE', page)
+    }
 
     emit(event: AppModelEventsName, data?: object | string) {
-        return super.emit(event)
+        return super.emit(event, data)
     }
 
-    on(event: AppModelEventsName, callback: () => void) {
+    on(event: AppModelEventsName, callback: (data: object | string) => void) {
         return super.on(event, callback)
-    }
-
-    getItems() {
-        return [...this.items]
-    }
-
-    addItem(item: Item) {
-        this.items.push(item)
-        this.emit('ITEM_ADD')
-    }
-
-    removeItem(id: string) {
-        this.items = this.items.filter((item) => id !== item.id)
-        this.emit('ITEM_REMOVE')
     }
 }
