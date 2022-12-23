@@ -3,6 +3,10 @@ import type { AppViewInstance } from '../views/view'
 import { RouterInstance } from '@/utils/Rooter'
 
 export class AppController {
+    private model: AppModelInstance
+    private view: AppViewInstance
+    private router: RouterInstance
+
     constructor(model: AppModelInstance, view: AppViewInstance, router: RouterInstance) {
         this.model = model
         this.view = view
@@ -13,11 +17,8 @@ export class AppController {
         })
         view.on('ITEM_BUTTON_CLICK', this.addItem)
         router.init()
+        view.buildApp()
     }
-
-    private model: AppModelInstance
-    private view: AppViewInstance
-    private router: RouterInstance
 
     addItem() {
         this.model.addItem({ id: Math.random().toString(), name: 'Item' })
