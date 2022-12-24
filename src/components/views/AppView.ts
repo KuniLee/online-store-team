@@ -21,7 +21,7 @@ export class AppView extends EventEmitter {
         this.mainPageContainer.className = 'flex-grow flex-auto'
 
         model.on('CHANGE_PAGE', (page) => {
-            if (page === 'notFound') this.load404page()
+            if (page === '/404') this.load404page()
         })
     }
 
@@ -37,7 +37,8 @@ export class AppView extends EventEmitter {
         this.container.querySelector('.cart-button')?.addEventListener('click', () => {
             this.emit('CART_BUTTON_CLICK')
         })
-        this.container.querySelector('.header__top-logo')?.addEventListener('click', () => {
+        this.container.querySelector('.header__top-logo')?.addEventListener('click', (ev) => {
+            ev.preventDefault()
             this.emit('LOGO_CLICK')
         })
     }

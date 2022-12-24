@@ -15,7 +15,7 @@ export class CartView extends EventEmitter {
         this.model = model
         this.container = container
         model.on('CHANGE_PAGE', (page) => {
-            if (page === 'cart') this.build()
+            if (page === '/cart') this.build()
         })
     }
 

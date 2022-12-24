@@ -15,7 +15,7 @@ export class CatalogView extends EventEmitter {
         this.model = model
         this.container = container
         model.on('CHANGE_PAGE', (page) => {
-            if (page === 'catalog') this.build()
+            if (page === '/') this.build()
         })
     }
 

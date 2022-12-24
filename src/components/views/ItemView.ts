@@ -15,7 +15,7 @@ export class ItemView extends EventEmitter {
         this.model = model
         this.container = container
         model.on('CHANGE_PAGE', (page) => {
-            if (page === 'item') this.build()
+            if (page === '/item') this.build()
         })
     }
 

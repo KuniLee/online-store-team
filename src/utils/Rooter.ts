@@ -7,21 +7,8 @@ type RouterEventsName = 'ROUTE'
 
 const history = createBrowserHistory()
 
-export enum PATHS {
-    catalog = '/',
-    item = '/item',
-    notFound = '/404',
-    cart = '/cart',
-}
-
-export type Pages = keyof typeof PATHS
-
-const ROUTES: Record<typeof PATHS[Pages], Pages> = {
-    [PATHS.catalog]: 'catalog',
-    [PATHS.item]: 'item',
-    [PATHS.cart]: 'cart',
-    [PATHS.notFound]: 'notFound',
-}
+const paths = ['/', '/item', '/404', '/cart']
+export type Paths = '/' | '/item' | '/404' | '/cart'
 
 export type RouterInstance = InstanceType<typeof Router>
 
@@ -39,35 +26,22 @@ export class Router extends EventEmitter {
         this.processRoutes(history.location)
     }
 
-    emit(event: RouterEventsName, page: keyof typeof PATHS, arg?: string) {
+    emit(event: RouterEventsName, page: Paths, arg?: string) {
         return super.emit(event, page, arg)
     }
 
-    push(path: string) {
+    push(path: Paths) {
         history.push(path)
     }
 
     private push404() {
-        this.push(PATHS.notFound)
+        this.push('/404')
     }
 
     processRoutes(location: Location) {
         this.pathParts = Array.from(location.pathname.match(/\/[a-z0-9]+/gi) || ['/'])
-        if (Object.prototype.hasOwnProperty.call(ROUTES, this.pathParts[0])) {
-            switch (this.pathParts[0]) {
-                case PATHS.catalog:
-                case PATHS.cart:
-                case PATHS.notFound:
-                    if (this.pathParts.length === 1) {
-                        this.emit('ROUTE', ROUTES[this.pathParts[0]])
-                    } else this.push404()
-                    break
-                case PATHS.item:
-                    if (this.pathParts.length === 2) {
-                        this.emit('ROUTE', ROUTES[PATHS.item], this.pathParts[1])
-                        break
-                    } else this.push404()
-            }
+        if (paths.includes(this.pathParts[0])) {
+            this.emit('ROUTE', this.pathParts[0] as Paths)
         } else this.push404()
     }
 }

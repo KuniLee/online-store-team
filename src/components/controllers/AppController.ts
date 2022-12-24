@@ -1,6 +1,6 @@
 import type { AppModelInstance } from '../models/model'
 import type { AppViewInstance } from '../views/AppView'
-import { Pages, PATHS, RouterInstance } from '@/utils/Rooter'
+import { Paths, RouterInstance } from '@/utils/Rooter'
 
 export class AppController {
     private model: AppModelInstance
@@ -11,16 +11,16 @@ export class AppController {
         this.model = model
         this.view = view
         this.router = router
-        router.on('ROUTE', (page: Pages, args) => {
+        router.on('ROUTE', (page: Paths, args) => {
             console.log('route to ', page)
             // TODO: проверка есть ли такой товар, если на item
             this.model.changePage(page, args)
         })
         view.on('CART_BUTTON_CLICK', () => {
-            this.router.push(PATHS.cart)
+            this.router.push('/cart')
         })
         view.on('LOGO_CLICK', () => {
-            this.router.push(PATHS.catalog)
+            this.router.push('/')
         })
         router.init()
     }
