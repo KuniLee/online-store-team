@@ -62,7 +62,7 @@ export class AppView extends EventEmitter {
         return this.mainPageContainer
     }
 
-    public load404page() {
+    private load404page() {
         this.mainPageContainer.innerHTML = notFoundTemplate
     }
 }

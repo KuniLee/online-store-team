@@ -2,6 +2,7 @@ import { createBrowserHistory } from 'history'
 import type { Location } from 'history'
 
 import EventEmitter from 'events'
+import queryString from 'query-string'
 
 type RouterEventsName = 'ROUTE'
 
@@ -43,5 +44,9 @@ export class Router extends EventEmitter {
         if (paths.includes(this.pathParts[0])) {
             this.emit('ROUTE', this.pathParts[0] as Paths)
         } else this.push404()
+    }
+
+    getQueries() {
+        history.push({ search: '?q=4' })
     }
 }
