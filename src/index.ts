@@ -10,9 +10,12 @@ import { CartView } from '@/components/views/CartView'
 import { CartController } from '@/components/controllers/CartController'
 import { ItemController } from '@/components/controllers/ItemController'
 import { ItemView } from '@/components/views/ItemView'
+import { ApiRequests } from '@/utils/loader'
 
 const router = new Router()
 const model = new AppModel()
+
+const loader = new ApiRequests()
 
 const appView = new AppView(model, document.body)
 const mainContainer = appView.buildApp()
@@ -23,4 +26,4 @@ const itemView = new ItemView(model, mainContainer)
 const catalogController = new CatalogController(model, catalogView)
 const itemController = new ItemController(model, itemView)
 const cartController = new CartController(model, cartView)
-const controller = new AppController(model, appView, router)
+const controller = new AppController(model, appView, router, loader)
