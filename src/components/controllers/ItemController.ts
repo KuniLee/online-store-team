@@ -16,10 +16,12 @@ export class ItemController {
             const pathPattern = location.pathname.match(/\w+\/\d{7}$/gm)
             if (pathParts[0] === 'item') {
                 const item = await this.model.getItem(Number(pathParts[1]))
+                console.log(pathPattern)
                 if (!pathPattern || !item) {
                     this.router.push('/404')
+                } else {
+                    this.view.build(item)
                 }
-                this.view.build(item)
             }
         })
     }
