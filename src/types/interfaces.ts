@@ -12,6 +12,7 @@ export interface Item {
     description: string
     stock: number
     id: string
+    updatedAt: Date
 }
 
 type Filter = {

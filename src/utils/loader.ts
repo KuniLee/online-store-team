@@ -16,6 +16,19 @@ export async function getItems(): Promise<Array<Item>> {
     }
 }
 
+export async function getItem(article: number) {
+    Parse.serverURL = 'https://parseapi.back4app.com' // This is your Server URL
+    Parse.initialize('bTBI54NNgMYOcu9Wek7gtUaNxzcRZTdOMsCKnSDa' || '', 'JuP0m3MeXtiTZALU5meiuTob4wbVOBOCe2F6raSa')
+    const query: Parse.Query = new Parse.Query('Items')
+    query.equalTo('article', article)
+    try {
+        const results: Parse.Object[] = await query.find()
+        return results
+    } catch (error: unknown) {
+        console.error('Error while fetching Products', error)
+    }
+}
+
 export async function getProducts() {
     const query: Parse.Query = new Parse.Query('Products')
     try {

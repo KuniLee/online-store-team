@@ -1,6 +1,6 @@
 import EventEmitter from 'events'
 import { Paths } from '@/utils/Rooter'
-import { getItems } from '@/utils/loader'
+import { getItems, getItem } from '@/utils/loader'
 import { Filters, Item } from 'types/interfaces'
 
 type AppModelEventsName = 'CHANGE_PAGE' | 'ITEM_REMOVE'
@@ -19,14 +19,19 @@ export class AppModel extends EventEmitter {
 
     changePage(page: Paths, args?: string) {
         this.currentPage = page
+        console.log(this.currentPage)
         switch (page) {
             case '/':
                 this.getItems().then(() => {
                     this.emit('CHANGE_PAGE', page)
                 })
+                break
+            case '/item':
+            case '/404':
+                this.emit('CHANGE_PAGE', page)
+                break
         }
     }
-
     async getItems() {
         if (!this.catalogItems.length) {
             try {
@@ -52,8 +57,19 @@ export class AppModel extends EventEmitter {
         console.log(this.filters)
     }
 
-    emit(event: AppModelEventsName, data?: Paths) {
-        return super.emit(event, data)
+    async getItem(article: number) {
+        if (article) {
+            try {
+                const item = await getItem(article)
+                return JSON.parse(JSON.stringify(item))[0]
+            } catch (e) {
+                console.error(e)
+            }
+        }
+    }
+
+    emit(event: AppModelEventsName, data?: Paths, article?: string) {
+        return super.emit(event, data, article)
     }
 
     on(event: AppModelEventsName, callback: (data: Paths) => void) {
