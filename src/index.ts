@@ -20,7 +20,7 @@ const catalogView = new CatalogView(model, mainContainer)
 const cartView = new CartView(model, mainContainer)
 const itemView = new ItemView(model, mainContainer)
 
-const catalogController = new CatalogController(model, catalogView)
+const catalogController = new CatalogController(model, catalogView, router)
 const itemController = new ItemController(model, itemView)
 const cartController = new CartController(model, cartView)
 const controller = new AppController(model, appView, router)
