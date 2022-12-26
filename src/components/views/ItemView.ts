@@ -43,6 +43,7 @@ export class ItemView extends EventEmitter {
         this.container.prepend(fragmentBread.content)
         const photosContainer = document.querySelector('.carousel-photo')
         const mainPhoto = document.querySelector('.main-photo')
+        const mainPhotoContainer = document.querySelector('.main-photo-container') as HTMLElement
         if (photosContainer && mainPhoto) {
             photosContainer.addEventListener('click', (event) => {
                 const target = event.target as HTMLElement
@@ -50,11 +51,20 @@ export class ItemView extends EventEmitter {
                     const imageSrc = target.getAttribute('src')
                     if (imageSrc) {
                         mainPhoto.setAttribute('src', imageSrc)
+                        mainPhotoContainer.setAttribute('style', `background-image: url('${imageSrc}'`)
                     } else {
                         console.error('Cant copy URL')
                     }
                 }
             })
+        }
+        if (mainPhotoContainer) {
+            mainPhotoContainer.onpointermove = function (e) {
+                const target = e.currentTarget as HTMLElement
+                const x = (e.offsetX / target.offsetWidth) * 100
+                const y = (e.offsetY / target.offsetHeight) * 100
+                target.style.backgroundPosition = `${x}% ${y}%`
+            }
         }
         const dropMenu = document.querySelector('.drop-menu')
         if (dropMenu) {

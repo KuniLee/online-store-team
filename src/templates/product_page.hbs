@@ -1,6 +1,8 @@
 <div class="max-w-[1200px] mx-auto my-0 box-border flex justify-between">
   <div class="w-[45%]">
-    <img class='main-photo w-full mb-4' src="{{photo1}}" alt="MainPhoto">
+    <figure class="main-photo-container bg-center relative w-full h-max group" style="background-image: url('{{photo1}}')">
+      <img class='main-photo w-full mb-4 group-hover:opacity-0' src="{{photo1}}" alt="MainPhoto">
+    </figure>
     <div class="carousel-photo flex justify-between">
       <img class="w-[18%] cursor-pointer" src="{{photo1}}" alt="Photo1">
       <img class="w-[18%] cursor-pointer" src="{{photo2}}" alt="Photo1">
@@ -18,7 +20,7 @@
       ₽
     </p>
     <div class="mb-4">
-      <p class="mr-4 font-HelveticaNeueCyr font-normal text-[16px] leading-[1.1] mb-4">Categoty: {{category}}</p>
+      <p class="mr-4 font-HelveticaNeueCyr font-normal text-[16px] leading-[1.1] mb-4">Category: {{category}}</p>
       <p class="mr-4 font-HelveticaNeueCyr font-normal text-[16px] leading-[1.1] mb-4">Brand: {{brand}}</p>
       <p class="mr-4 font-HelveticaNeueCyr font-normal text-[16px] leading-[1.1] mb-4">Stock: {{stock}}</p>
       <p class="mr-4 font-HelveticaNeueCyr font-normal text-[16px] leading-[1.1] mb-4">Last updated: {{updateAt}}</p>
