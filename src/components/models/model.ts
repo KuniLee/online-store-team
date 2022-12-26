@@ -28,10 +28,11 @@ export class AppModel extends EventEmitter {
                 break
             case '/item':
             case '/404':
-                this.emit('CHANGE_PAGE', page)
+                this.emit('CHANGE_PAGE', page, args)
                 break
         }
     }
+
     async getItems() {
         if (!this.catalogItems.length) {
             try {
@@ -72,11 +73,7 @@ export class AppModel extends EventEmitter {
         return super.emit(event, data, article)
     }
 
-    on(event: AppModelEventsName, callback: (data: Paths) => void) {
+    on(event: AppModelEventsName, callback: (data: Paths, args: { path: string }) => void) {
         return super.on(event, callback)
     }
-
-    //     setFilters(queries) {
-    //         console.log(queries)
-    //     }
 }
