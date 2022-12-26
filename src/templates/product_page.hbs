@@ -1,11 +1,14 @@
 <div class="max-w-[1200px] mx-auto my-0 box-border flex justify-between">
-  <div class="w-1/2">
-    <img class='main-photo w-full mb-4' src="{{photo1}}" alt="Photo2">
-    <img class='main-photo w-full mb-4' src="{{photo2}}" alt="Photo2">
-    <img class='main-photo w-full mb-4' src="{{photo3}}" alt="Photo2">
-    <img class='main-photo w-full mb-4' src="{{photo4}}" alt="Photo2">
+  <div class="w-[45%]">
+    <img class='main-photo w-full mb-4' src="{{photo1}}" alt="MainPhoto">
+    <div class="carousel-photo flex justify-between">
+      <img class="w-[18%] cursor-pointer" src="{{photo1}}" alt="Photo1">
+      <img class="w-[18%] cursor-pointer" src="{{photo2}}" alt="Photo1">
+      <img class="w-[18%] cursor-pointer" src="{{photo3}}" alt="Photo1">
+      <img class="w-[18%] cursor-pointer" src="{{photo4}}" alt="Photo1">
+    </div>
   </div>
-  <div class="w-1/2">
+  <div class="w-[45%]">
     <div class="flex items-center justify-between mb-[10px]">
       <h2 class="font-HelveticaNeueCyr font-[550] text-[32px] leading-snug">{{name}}</h2>
       <p class="font-HelveticaNeueCyr font-normal text-[16px] text-gray-300">Article: <span>{{article}}</span></p>

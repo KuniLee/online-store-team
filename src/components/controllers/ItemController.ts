@@ -14,7 +14,8 @@ export class ItemController {
         model.on('CHANGE_PAGE', async (page: Paths, args) => {
             if (args?.path && page === '/item') {
                 const item = await this.model.getItem(Number.parseInt(args?.path.slice(1)))
-                if (!item) this.router.push('/404')
+                const pathPattern = location.pathname.match(/\w+\/\d{7}$/gm)
+                if (!item || !pathPattern) this.router.push('/404')
                 else this.view.build(item)
             }
         })

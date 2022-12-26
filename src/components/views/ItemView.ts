@@ -25,10 +25,10 @@ export class ItemView extends EventEmitter {
         this.container.innerHTML = itemTemplate({
             name: object.title,
             price: object.price,
-            photo1: object.images[0],
-            photo2: object.images[1],
-            photo3: object.images[2],
-            photo4: object.images[3],
+            photo1: `${object.images[0]}&fit=constrain`,
+            photo2: `${object.images[1]}&fit=constrain`,
+            photo3: `${object.images[2]}&fit=constrain`,
+            photo4: `${object.images[3]}&fit=constrain`,
             article: object.article,
             category: object.category,
             brand: object.brand,
@@ -41,11 +41,21 @@ export class ItemView extends EventEmitter {
             titleBread: object.title,
         })
         this.container.prepend(fragmentBread.content)
-        document.querySelectorAll('.main-photo').forEach((el) => {
-            if (el.getAttribute('src') === '') {
-                el.classList.add('hidden')
-            }
-        })
+        const photosContainer = document.querySelector('.carousel-photo')
+        const mainPhoto = document.querySelector('.main-photo')
+        if (photosContainer && mainPhoto) {
+            photosContainer.addEventListener('click', (event) => {
+                const target = event.target as HTMLElement
+                if (target.tagName === 'IMG') {
+                    const imageSrc = target.getAttribute('src')
+                    if (imageSrc) {
+                        mainPhoto.setAttribute('src', imageSrc)
+                    } else {
+                        console.error('Cant copy URL')
+                    }
+                }
+            })
+        }
         const dropMenu = document.querySelector('.drop-menu')
         if (dropMenu) {
             dropMenu.addEventListener('click', () => {
