@@ -13,3 +13,74 @@
     font-family: 'Arial';
     src: url('../assets/fonts/ArialMdm.ttf');
 }
+
+.stockRangeContainer,
+.stockPriceContainer{
+    display: grid;
+    grid-template-rows: max-content 10px;
+    overflow: hidden;
+    position: relative;
+    margin: 1em auto;
+    width: 120px;
+    background: linear-gradient(0deg, #ccc 10px, transparent 0);
+}
+.rangeStock,
+.rangePrice {
+    max-width: 100%;
+    -webkit-appearance: none;
+    background: none;
+    color: #000;
+    font: inherit;
+    margin: 0;
+    pointer-events: none;
+}
+.rangeStock::-webkit-slider-runnable-track,
+.rangePrice::-webkit-slider-runnable-track{
+    -webkit-appearance: none;
+    background: none;
+    height: 100%;
+    width: 100%;
+}
+.rangeStock::-moz-range-track,
+.rangePrice::-moz-range-track{
+    background: none;
+    height: 100%;
+    width: 100%;
+}
+.rangeStock::-webkit-slider-thumb,
+.rangePrice::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    cursor: pointer;
+    background: black;
+    border: none;
+    border-radius: 0;
+    pointer-events: auto;
+    width: 10px;
+    height: 10px;
+    padding: 5px;
+}
+.rangeStock::-moz-range-track,
+.rangePrice::-moz-range-track{
+    background: currentcolor;
+    border: none;
+    border-radius: 0;
+    pointer-events: auto;
+    width: 10px;
+    height: 10px;
+}
+
+.typesScroll::-webkit-scrollbar,
+.brandsScroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.typesScroll::-webkit-scrollbar-track,
+.brandsScroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.typesScroll::-webkit-scrollbar-thumb,
+.brandsScroll::-webkit-scrollbar-thumb {
+    background-color: gray;
+    border-radius: 10px;
+}
