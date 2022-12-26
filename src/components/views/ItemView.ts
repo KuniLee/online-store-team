@@ -1,7 +1,6 @@
 import EventEmitter from 'events'
 import type { AppModelInstance } from '../models/model'
 import itemTemplate from '@/templates/product_page.hbs'
-import breadTemplate from '@/templates/Breadcrumb.hbs'
 import { Item } from 'types/interfaces'
 
 type ItemViewEventsName = 'ITEM_BUTTON_CLICK'
@@ -19,7 +18,6 @@ export class ItemView extends EventEmitter {
     }
 
     build(object: Item) {
-        const fragmentBread = document.createElement('template')
         const dateObj = new Date(object.updatedAt)
         const date = `${dateObj.getDate()}-${dateObj.getMonth()}-${dateObj.getFullYear()}`
         this.container.innerHTML = itemTemplate({
@@ -36,11 +34,6 @@ export class ItemView extends EventEmitter {
             updateAt: date,
             description: object.description,
         })
-        fragmentBread.innerHTML = breadTemplate({
-            brandBread: object.brand,
-            titleBread: object.title,
-        })
-        this.container.prepend(fragmentBread.content)
         const photosContainer = document.querySelector('.carousel-photo')
         const mainPhoto = document.querySelector('.main-photo')
         const mainPhotoContainer = document.querySelector('.main-photo-container') as HTMLElement
