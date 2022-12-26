@@ -2,10 +2,17 @@
 module.exports = {
     content: ['./src/**/*.{html,hbs,js,ts}'],
     theme: {
-        extend: {},
+        extend: {
+            container: {
+                padding: {
+                    DEFAULT: '1rem',
+                    sm: '2rem',
+                },
+            },
+        },
         fontFamily: {
-            'HelveticaNeueCyr': ['HelveticaNeueCyr', 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
-            'Arial': ['Arial', 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+            HelveticaNeueCyr: ['HelveticaNeueCyr', 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+            Arial: ['Arial', 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
         },
     },
     plugins: [],

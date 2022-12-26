@@ -17,6 +17,10 @@ export class AppModel extends EventEmitter {
         super()
     }
 
+    get items() {
+        return this.catalogItems
+    }
+
     changePage(page: Paths, args?: string) {
         this.currentPage = page
         console.log(this.currentPage)

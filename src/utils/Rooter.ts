@@ -40,7 +40,7 @@ export class Router extends EventEmitter {
 
     processRoutes(location: Location) {
         this.pathParts = Array.from(location.pathname.match(/\/[a-z0-9]+/gi) || ['/'])
-        if (paths.includes(this.pathParts[0])) {
+        if (paths.includes(this.pathParts[0]) && this.pathParts.length <= 2) {
             this.emit('ROUTE', this.pathParts[0] as Paths, { path: this.pathParts[1] })
         } else this.push404()
     }
