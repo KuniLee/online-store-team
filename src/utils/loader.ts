@@ -4,7 +4,9 @@ import { Item } from 'types/interfaces'
 Parse.serverURL = 'https://parseapi.back4app.com' // This is your Server URL
 // Remember to inform BOTH the Back4App Application ID AND the JavaScript KEY
 Parse.initialize(process.env.BACK4APP_APP_ID || '', process.env.BACK4APP_JS_KEY)
-
+console.log('///////////////////////////////////')
+console.log(process.env.BACK4APP_APP_ID)
+console.log('///////////////////////////////////')
 export async function getItems(): Promise<Array<Item>> {
     const query: Parse.Query = new Parse.Query('Products')
     try {

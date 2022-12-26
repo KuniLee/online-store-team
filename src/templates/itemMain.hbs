@@ -1,14 +1,14 @@
-<div class="relative group">
-  <a href="item/{{article}}">
-    <img class="w-full" src="{{image.[0]}}" alt="Photo1">
+<div class="relative group {{#if big}}sm:col-span-2 sm:row-span-2{{/if}} flex flex-col justify-between">
+  <a class="flex-grow" href="item/{{article}}">
+    <img class="object-cover {{#if big}}h-full{{/if}}" src="{{images.[1]}}&fit=constrain" alt="Photo1">
   </a>
   <div class="group-hover:animate-pulse invisible group-hover:visible absolute top-2 right-2 cursor-pointer">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
       <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
     </svg>
   </div>
-  <div class="flex justify-between mt-2.5 font-HelveticaNeueCyr text-black ">
-    <p class="max-w-[75%]">{{description}}</p>
+  <div class="flex justify-between mt-2.5 h-10 font-HelveticaNeueCyr text-black leading-5">
+    <p class="">{{title}}</p>
     <p class="font-bold">{{price}}<span>₽</span></p>
   </div>
 </div>
