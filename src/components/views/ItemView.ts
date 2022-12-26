@@ -21,18 +21,9 @@ export class ItemView extends EventEmitter {
         const dateObj = new Date(object.updatedAt)
         const date = `${dateObj.getDate()}-${dateObj.getMonth()}-${dateObj.getFullYear()}`
         this.container.innerHTML = itemTemplate({
-            name: object.title,
-            price: object.price,
-            photo1: `${object.images[0]}&fit=constrain`,
-            photo2: `${object.images[1]}&fit=constrain`,
-            photo3: `${object.images[2]}&fit=constrain`,
-            photo4: `${object.images[3]}&fit=constrain`,
-            article: object.article,
-            category: object.category,
-            brand: object.brand,
-            stock: object.stock,
-            updateAt: date,
-            description: object.description,
+            object,
+            date: date,
+            imageFirst: object.images[0],
         })
         const photosContainer = document.querySelector('.carousel-photo')
         const mainPhoto = document.querySelector('.main-photo')
