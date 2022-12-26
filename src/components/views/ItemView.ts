@@ -42,6 +42,17 @@ export class ItemView extends EventEmitter {
                 }
             })
         }
+        const listOfSmallPhoto = document.querySelectorAll('.small-photo')
+        if (listOfSmallPhoto) {
+            listOfSmallPhoto.forEach((el) => {
+                if (el.getAttribute('src') === '') {
+                    el.classList.add('hidden')
+                }
+                if (Number(el.getAttribute('data-index')) > 3) {
+                    el.remove()
+                }
+            })
+        }
         if (mainPhotoContainer) {
             mainPhotoContainer.onpointermove = function (e) {
                 const target = e.currentTarget as HTMLElement

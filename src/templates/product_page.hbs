@@ -20,7 +20,7 @@
     </figure>
     <div class="carousel-photo flex justify-between">
       {{#each object.images}}
-      <img class="w-[18%] cursor-pointer" src="{{this}}&fit=constrain" alt="Photo1">
+      <img class="small-photo w-[18%] cursor-pointer" src="{{this}}&fit=constrain" data-index="{{@index}}">
       {{/each}}
     </div>
   </div>
