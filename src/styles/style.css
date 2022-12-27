@@ -84,3 +84,7 @@
     background-color: gray;
     border-radius: 10px;
 }
+
+.main-photo-container {
+    background-position: 50% 50%;
+}
