@@ -82,7 +82,6 @@ const config = {
             {
                 test: /\.css$/,
                 use: sccLoaders('postcss-loader'),
-                exclude: /node_modules/,
             },
             {
                 test: /\.(?:ico|gif|png|jpg|jpeg)$/i,

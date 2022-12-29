@@ -3,6 +3,8 @@ import type { AppModelInstance } from '../models/model'
 import catalogTemplate from '@/templates/catalog.html'
 import { Item } from 'types/interfaces'
 import cardTemplate from '@/templates/itemMain.hbs'
+import noUiSlider from 'nouislider'
+import { target } from 'nouislider'
 
 type CatalogViewEventsName = 'ITEM_BUTTON_CLICK'
 
@@ -28,6 +30,23 @@ export class CatalogView extends EventEmitter {
 
     build() {
         this.container.innerHTML = catalogTemplate
+        const slider = document.getElementById('slider') as target
+        if (slider) {
+            noUiSlider.create(slider, {
+                start: [20, 80],
+                tooltips: [true, true],
+                connect: true,
+                step: 10,
+                margin: 10,
+                range: {
+                    min: 0,
+                    max: 100,
+                },
+            })
+            slider.noUiSlider?.on('change', (ev) => {
+                console.log(ev)
+            })
+        }
     }
 
     emit(event: CatalogViewEventsName) {
