@@ -17,8 +17,8 @@ export class Router extends EventEmitter {
 
     constructor() {
         super()
-        history.listen(({ location }) => {
-            this.processRoutes(location)
+        history.listen(({ location, action }) => {
+            if (action === 'PUSH') this.processRoutes(location)
         })
     }
 
@@ -45,7 +45,7 @@ export class Router extends EventEmitter {
         } else this.push404()
     }
 
-    getQueries() {
-        history.push({ search: '?q=4' })
+    setQueries() {
+        history.replace({ search: '?q=4' })
     }
 }
