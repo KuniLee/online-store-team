@@ -9,7 +9,6 @@ export type AppModelInstance = InstanceType<typeof AppModel>
 export class AppModel extends EventEmitter {
     private currentPage: Paths | undefined
     private catalogItems: Array<Item> = []
-    private catalogItemsFiltered: Array<Item> = []
     private cartItems: Array<Item> = []
 
     constructor() {
@@ -20,12 +19,12 @@ export class AppModel extends EventEmitter {
         return this.catalogItems
     }
 
-    changePage(page: Paths, args?: string) {
+    changePage(page: Paths, args?: { path: string; search: string }) {
         this.currentPage = page
         switch (page) {
             case '/':
                 this.getItems().then(() => {
-                    this.emit('CHANGE_PAGE', page)
+                    this.emit('CHANGE_PAGE', page, args)
                 })
                 break
             case '/item':
@@ -56,11 +55,11 @@ export class AppModel extends EventEmitter {
         }
     }
 
-    emit(event: AppModelEventsName, data?: Paths, article?: string) {
+    emit(event: AppModelEventsName, data?: Paths, article?: { path: string; search: string }) {
         return super.emit(event, data, article)
     }
 
-    on(event: AppModelEventsName, callback: (data: Paths, args: { path: string }) => void) {
+    on(event: AppModelEventsName, callback: (data: Paths, args: { path: string; search: string }) => void) {
         return super.on(event, callback)
     }
 }

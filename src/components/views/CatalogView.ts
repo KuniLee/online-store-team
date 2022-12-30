@@ -20,8 +20,9 @@ export class CatalogView extends EventEmitter {
         super()
         this.model = model
         this.container = container
-        this.model.on('CHANGE_PAGE', (page, args) => {
+        this.model.on('CHANGE_PAGE', (page, { search }) => {
             if (page === '/') {
+                console.log('search', search)
                 this.build()
                 this.items = this.model.items
                 this.rebuildCards()

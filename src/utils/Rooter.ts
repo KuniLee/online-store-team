@@ -1,5 +1,5 @@
 import { createBrowserHistory } from 'history'
-import type { Location } from 'history'
+import type { Location, Search } from 'history'
 
 import EventEmitter from 'events'
 
@@ -26,7 +26,7 @@ export class Router extends EventEmitter {
         this.processRoutes(history.location)
     }
 
-    emit(event: RouterEventsName, page: Paths, arg?: string | { path: string }) {
+    emit(event: RouterEventsName, page: Paths, arg?: { path: string; search?: Search }) {
         return super.emit(event, page, arg)
     }
 
@@ -41,7 +41,7 @@ export class Router extends EventEmitter {
     processRoutes(location: Location) {
         this.pathParts = Array.from(location.pathname.match(/\/[a-z0-9]+/gi) || ['/'])
         if (paths.includes(this.pathParts[0]) && this.pathParts.length <= 2) {
-            this.emit('ROUTE', this.pathParts[0] as Paths, { path: this.pathParts[1] })
+            this.emit('ROUTE', this.pathParts[0] as Paths, { path: this.pathParts[1], search: location.search })
         } else this.push404()
     }
 
