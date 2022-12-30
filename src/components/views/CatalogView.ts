@@ -1,7 +1,7 @@
 import EventEmitter from 'events'
 import type { AppModelInstance } from '../models/model'
 import catalogTemplate from '@/templates/catalog.html'
-import { Item } from 'types/interfaces'
+import { Filters, Item } from 'types/interfaces'
 import cardTemplate from '@/templates/itemMain.hbs'
 import noUiSlider from 'nouislider'
 import { target } from 'nouislider'
@@ -14,21 +14,38 @@ export class CatalogView extends EventEmitter {
     private container: HTMLElement
     private model: AppModelInstance
     private items: Array<Item> = []
+    private filters: Filters = { category: {}, brand: {}, price: {}, stock: {} }
 
     constructor(model: AppModelInstance, container: HTMLElement) {
         super()
         this.model = model
         this.container = container
-        model.on('CHANGE_PAGE', (page, args) => {
+        this.model.on('CHANGE_PAGE', (page, args) => {
             if (page === '/') {
                 this.build()
-                this.items = model.items
+                this.items = this.model.items
                 this.rebuildCards()
             }
         })
     }
 
     build() {
+        this.model.items.forEach(({ category, brand, price, stock }) => {
+            // calculate categories total
+            if (!this.filters.category[category]) this.filters.category[category] = { total: 0, count: 0 }
+            // calculate categories brands
+            if (!this.filters.brand[brand]) this.filters.brand[brand] = { total: 0, count: 0 }
+
+            if (!this.filters.price.min || this.filters.price.min > price) this.filters.price.min = price
+            if (!this.filters.price.max || this.filters.price.max < price) this.filters.price.max = price
+            if (!this.filters.stock.min || this.filters.stock.min > price) this.filters.stock.min = stock
+            if (!this.filters.stock.max || this.filters.stock.max < price) this.filters.stock.max = stock
+
+            this.filters.brand[brand].total++
+            this.filters.category[category].total++
+        })
+        console.log(this.filters)
+
         this.container.innerHTML = catalogTemplate
         const slider = document.getElementById('slider') as target
         if (slider) {
