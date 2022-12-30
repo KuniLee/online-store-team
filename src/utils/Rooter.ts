@@ -18,7 +18,7 @@ export class Router extends EventEmitter {
     constructor() {
         super()
         history.listen(({ location, action }) => {
-            if (action === 'PUSH') this.processRoutes(location)
+            this.processRoutes(location)
         })
     }
 
@@ -30,7 +30,7 @@ export class Router extends EventEmitter {
         return super.emit(event, page, arg)
     }
 
-    push(path: Paths) {
+    push(path: string) {
         history.push(path)
     }
 
