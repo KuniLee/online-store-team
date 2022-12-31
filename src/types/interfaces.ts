@@ -15,20 +15,22 @@ export interface Item {
     updatedAt: Date
 }
 
-type Filter = {
+export type Filter = {
     [index: string]: {
+        check: boolean
         total: number
         count: number
     }
 }
-type DualSlider = {
+export type DualSlider = {
     min: number
     max: number
 }
 
-export interface Filters {
+export interface FiltersSetting {
     category: Filter
     brand: Filter
     price: Partial<DualSlider>
     stock: Partial<DualSlider>
+    total: number
 }

@@ -1,0 +1,5 @@
+<div class="flex border-b py-1.5 last:border-0 justify-between mx-auto">
+  <input type="checkbox" {{#if body.check}}checked{{/if}} class="checked:bg-amber-400" name=type id="{{id}}:{{name}}">
+  <label class="flex-grow mx-1" for="{{id}}:{{name}}">{{name}}</label>
+  <span class="text-gray-400">{{body.count}}/{{body.total}}</span>
+</div>
