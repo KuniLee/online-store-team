@@ -33,6 +33,7 @@ export interface FiltersSetting {
     sort: string
     category: Filter
     brand: Filter
+    search: string | null
     price: DualSlider
     stock: DualSlider
     total: number

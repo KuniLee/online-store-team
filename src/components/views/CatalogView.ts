@@ -21,6 +21,7 @@ export class CatalogView extends EventEmitter {
         price: { min: 0, max: 0 },
         stock: { min: 0, max: 0 },
         total: 0,
+        search: null,
         sort: '',
     }
     private filteredItems: Array<Item> = []
@@ -95,6 +96,11 @@ export class CatalogView extends EventEmitter {
                 const [minStock, maxStock] = this.settings.stock.current
                 clause = clause && item.stock >= minStock && item.stock <= maxStock
             }
+            if (this.settings.search) {
+                const reg = new RegExp(this.settings.search, 'i')
+                const searchIn = [item.article, item.description, item.title, item.price]
+                clause = clause && searchIn.some((el) => reg.test(el.toString()))
+            }
 
             if (clause) {
                 this.settings.brand[item.brand].count++
@@ -144,6 +150,7 @@ export class CatalogView extends EventEmitter {
             price: { min: 0, max: 0 },
             stock: { min: 0, max: 0 },
             total: 0,
+            search: null,
             sort: '',
         }
         this.model.items.forEach(({ category, brand, price, stock }) => {
@@ -174,6 +181,10 @@ export class CatalogView extends EventEmitter {
             if (['price:ASC', 'price:DESC', 'sold:ASC', 'sold:DESC'].includes(parsedSearch.sort))
                 this.settings.sort = parsedSearch.sort
         }
+
+        if (parsedSearch.search && typeof parsedSearch.search === 'string') {
+            this.settings.search = parsedSearch.search
+        }
     }
 
     buildQueryString() {
@@ -183,6 +194,7 @@ export class CatalogView extends EventEmitter {
             price?: Array<string>
             stock?: Array<string>
             sort?: string
+            search?: string
         } = {}
         for (const brandKey in this.settings.brand) {
             if (this.settings.brand[brandKey].check) {
@@ -205,6 +217,8 @@ export class CatalogView extends EventEmitter {
         }
 
         if (this.settings.sort !== '') query.sort = this.settings.sort
+
+        if (this.settings.search) query.search = this.settings.search
 
         this.emit(
             'CHANGE_FILTER',

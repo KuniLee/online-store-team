@@ -19,6 +19,7 @@ export class Filters extends EventEmitter {
         this.totalEl = this.container.querySelector('#total')
         this.buildDropdowns()
         this.buildSorting()
+        this.buildSearch()
     }
 
     emit(event: FiltersEventsName) {
@@ -77,6 +78,16 @@ export class Filters extends EventEmitter {
             if (this.sortEl && this.sortEl.selectedIndex)
                 this.settings.sort = this.sortEl.options[this.sortEl.selectedIndex].value
             else this.settings.sort = ''
+            this.emit('FILTER_CHANGE')
+        })
+    }
+
+    private buildSearch() {
+        const searchEl = document.querySelector('#search') as HTMLInputElement
+        if (this.settings.search) searchEl.value = this.settings.search
+        searchEl.addEventListener('input', () => {
+            if (searchEl.value !== '') this.settings.search = searchEl.value
+            else this.settings.search = null
             this.emit('FILTER_CHANGE')
         })
     }
