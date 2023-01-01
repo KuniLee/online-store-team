@@ -6,6 +6,7 @@ export interface Item {
     price: number
     images: Array<URL>
     title: string
+    sold: number
     category: string
     brand: string
     article: number
@@ -25,12 +26,13 @@ export type Filter = {
 export type DualSlider = {
     min: number
     max: number
+    current?: [number, number]
 }
 
 export interface FiltersSetting {
     category: Filter
     brand: Filter
-    price: Partial<DualSlider>
-    stock: Partial<DualSlider>
+    price: DualSlider
+    stock: DualSlider
     total: number
 }

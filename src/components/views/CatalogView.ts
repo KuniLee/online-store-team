@@ -3,8 +3,6 @@ import type { AppModelInstance } from '../models/model'
 import catalogTemplate from '@/templates/catalog.html'
 import { FiltersSetting, Item } from 'types/interfaces'
 import cardTemplate from '@/templates/itemMain.hbs'
-import noUiSlider from 'nouislider'
-import { target } from 'nouislider'
 import queryString from 'query-string'
 import { Filters } from '@/utils/filters'
 
@@ -17,7 +15,13 @@ export class CatalogView extends EventEmitter {
     private model: AppModelInstance
     private items: Array<Item> = []
     private filters: Filters | undefined
-    private settings: FiltersSetting = { category: {}, brand: {}, price: {}, stock: {}, total: 0 }
+    private settings: FiltersSetting = {
+        category: {},
+        brand: {},
+        price: { min: 0, max: 0 },
+        stock: { min: 0, max: 0 },
+        total: 0,
+    }
     private filteredItems: Array<Item> = []
 
     constructor(model: AppModelInstance, container: HTMLElement) {
@@ -50,25 +54,8 @@ export class CatalogView extends EventEmitter {
                 const link = event.composedPath().find((el) => (el as HTMLElement).tagName === 'A')
                 if (link) this.emit('GO_TO_ITEM', new URL((link as HTMLAnchorElement).href).pathname)
             })
-        const slider = this.container.querySelector('#slider') as target
         const filterContainer = this.container.querySelector('#filters') as HTMLElement
         this.filters = new Filters(filterContainer, this.settings)
-        if (slider) {
-            noUiSlider.create(slider, {
-                start: [20, 80],
-                tooltips: [true, true],
-                connect: true,
-                step: 10,
-                margin: 10,
-                range: {
-                    min: 0,
-                    max: 100,
-                },
-            })
-            slider.noUiSlider?.on('change', (ev) => {
-                console.log(ev)
-            })
-        }
     }
 
     filterItems() {
@@ -78,7 +65,17 @@ export class CatalogView extends EventEmitter {
         let categories = Object.keys(this.settings.category).filter((el) => this.settings.category[el].check)
         if (!categories.length) categories = [...Object.keys(this.settings.category)]
         this.filteredItems = this.items.filter((item) => {
-            if (brands.includes(item.brand) && categories.includes(item.category)) {
+            let clause: boolean = brands.includes(item.brand) && categories.includes(item.category)
+            if (this.settings.price.current) {
+                const [minPrice, maxPrice] = this.settings.price.current
+                clause = clause && item.price >= minPrice && item.price <= maxPrice
+            }
+            if (this.settings.stock.current) {
+                const [minStock, maxStock] = this.settings.stock.current
+                clause = clause && item.stock >= minStock && item.stock <= maxStock
+            }
+
+            if (clause) {
                 this.settings.brand[item.brand].count++
                 this.settings.category[item.category].count++
                 this.settings.total++
@@ -120,7 +117,7 @@ export class CatalogView extends EventEmitter {
 
     private setFilters(search: string) {
         const parsedSearch = queryString.parse(search, { arrayFormat: 'bracket-separator', arrayFormatSeparator: '|' })
-        this.settings = { category: {}, brand: {}, price: {}, stock: {}, total: 0 }
+        this.settings = { category: {}, brand: {}, price: { min: 0, max: 0 }, stock: { min: 0, max: 0 }, total: 0 }
         this.model.items.forEach(({ category, brand, price, stock }) => {
             // calculate categories total
             if (!this.settings.category[category])
@@ -138,10 +135,18 @@ export class CatalogView extends EventEmitter {
             this.settings.brand[brand].total++
             this.settings.category[category].total++
         })
+        if (parsedSearch.price && Array.isArray(parsedSearch.price)) {
+            this.settings.price.current = [Number(parsedSearch.price[0]), Number(parsedSearch.price[1])]
+        }
+        if (parsedSearch.stock && Array.isArray(parsedSearch.stock)) {
+            this.settings.stock.current = [Number(parsedSearch.stock[0]), Number(parsedSearch.stock[1])]
+        }
+        console.log(parsedSearch)
     }
 
     buildQueryString() {
-        const query: { brand?: Array<string>; category?: Array<string> } = {}
+        const query: { brand?: Array<string>; category?: Array<string>; price?: Array<string>; stock?: Array<string> } =
+            {}
         for (const brandKey in this.settings.brand) {
             if (this.settings.brand[brandKey].check) {
                 if (!('brand' in query)) query.brand = [brandKey]
@@ -154,6 +159,14 @@ export class CatalogView extends EventEmitter {
                 else query.category?.push(categoryKey)
             }
         }
+
+        if (this.settings.price.current) {
+            query.price = this.settings.price.current.map((el) => el.toString())
+        }
+        if (this.settings.stock.current) {
+            query.stock = this.settings.stock.current.map((el) => el.toString())
+        }
+
         this.emit(
             'CHANGE_FILTER',
             queryString.stringify(query, {

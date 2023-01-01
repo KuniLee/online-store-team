@@ -1,6 +1,8 @@
 import EventEmitter from 'events'
-import { Filter, FiltersSetting } from 'types/interfaces'
+import { DualSlider, Filter, FiltersSetting } from 'types/interfaces'
 import dropdownTemplate from '@/templates/dropdownItem.hbs'
+import noUiSlider from 'nouislider'
+import { target } from 'nouislider'
 
 type FiltersEventsName = 'FILTER_CHANGE'
 
@@ -8,6 +10,8 @@ export class Filters extends EventEmitter {
     private categoryFilter: Menu | undefined
     private brandFilter: Menu | undefined
     private totalEl: Element | null
+    private priceFilter: Range | undefined
+    private stockFilter: Range | undefined
 
     constructor(private container: HTMLElement, private settings: FiltersSetting) {
         super()
@@ -24,19 +28,43 @@ export class Filters extends EventEmitter {
     }
 
     rebuildFilters() {
-        this.categoryFilter?.setFields(this.settings.category, 'category')
-        this.brandFilter?.setFields(this.settings.brand, 'brand')
+        this.categoryFilter?.setFields(this.settings.category)
+        this.brandFilter?.setFields(this.settings.brand)
+        this.priceFilter?.setFields(this.settings.price)
+        this.stockFilter?.setFields(this.settings.stock)
         ;(this.totalEl as HTMLElement).textContent = this.settings.total.toString()
     }
 
     private buildDropdowns() {
-        this.categoryFilter = new Menu(this.container.querySelector('#categoryFilter'), this.onchange.bind(this))
-        this.brandFilter = new Menu(this.container.querySelector('#brandFilter'), this.onchange.bind(this))
+        this.categoryFilter = new Menu(
+            this.container.querySelector('#categoryFilter'),
+            'category',
+            this.onchangeMenu.bind(this)
+        )
+        this.brandFilter = new Menu(this.container.querySelector('#brandFilter'), 'brand', this.onchangeMenu.bind(this))
+        this.priceFilter = new Range(
+            this.container.querySelector('#priceFilter'),
+            this.settings.price,
+            'price',
+            this.onchangeRange.bind(this)
+        )
+        this.stockFilter = new Range(
+            this.container.querySelector('#stockFilter'),
+            this.settings.stock,
+            'stock',
+            this.onchangeRange.bind(this)
+        )
     }
 
-    onchange(data: DataFromFilter) {
+    onchangeMenu(data: DataFromFilter) {
         // @ts-ignore
         this.settings[data.id][data.name].check = data.state
+        this.emit('FILTER_CHANGE')
+    }
+
+    onchangeRange(data: DataFromFilter) {
+        // @ts-ignore
+        this.settings[data.id].current = data.state
         this.emit('FILTER_CHANGE')
     }
 }
@@ -47,7 +75,11 @@ class Dropdown {
     private arrow: SVGSVGElement | undefined | null
     public isOpen = false
 
-    constructor(private el: HTMLElement | null, protected callback: (data: DataFromFilter) => void) {
+    constructor(
+        private el: HTMLElement | null,
+        protected name: string,
+        protected callback: (data: DataFromFilter) => void
+    ) {
         this.button = el?.querySelector('button')
         this.arrow = this.button?.querySelector('svg')
         this.dropdownMenu = el?.querySelector('.dropdownMenu')
@@ -77,19 +109,54 @@ class Dropdown {
     }
 }
 
-class Menu extends Dropdown {
-    constructor(el: HTMLElement | null, callback: (data: DataFromFilter) => void) {
-        super(el, callback)
+class Range extends Dropdown {
+    private readonly sliderEl: target
+
+    constructor(
+        el: HTMLElement | null,
+        setting: DualSlider,
+        name: keyof FiltersSetting,
+        callback: (data: DataFromFilter) => void
+    ) {
+        super(el, name, callback)
+        this.sliderEl = document.createElement('div')
+        noUiSlider.create(this.sliderEl, {
+            start: [setting.min, setting.max],
+            tooltips: [true, true],
+            connect: true,
+            step: 10,
+            margin: 10,
+            range: {
+                min: setting.min,
+                '70%': [3000],
+                max: setting.max,
+            },
+        })
+        this.sliderEl.noUiSlider?.on('change', (ev) => {
+            const data: [number, number] = [+ev[0], +ev[1]]
+            this.callback({ id: this.name, state: data })
+        })
+        this.dropdownMenu?.append(this.sliderEl)
     }
 
-    setFields(fields: Filter, name: keyof FiltersSetting) {
+    setFields(fields: DualSlider) {
+        if (fields.current) this.sliderEl.noUiSlider?.set(fields.current)
+    }
+}
+
+class Menu extends Dropdown {
+    constructor(el: HTMLElement | null, name: keyof FiltersSetting, callback: (data: DataFromFilter) => void) {
+        super(el, name, callback)
+    }
+
+    setFields(fields: Filter) {
         const container = document.createElement('fieldset')
         Object.keys(fields)
             .sort()
             .forEach((field) => {
                 container.insertAdjacentHTML(
                     'beforeend',
-                    dropdownTemplate({ id: name, name: field, body: fields[field] })
+                    dropdownTemplate({ id: this.name, name: field, body: fields[field] })
                 )
             })
         ;(this.dropdownMenu as HTMLElement).innerHTML = ''
@@ -99,6 +166,6 @@ class Menu extends Dropdown {
 
 type DataFromFilter = {
     id: string
-    name: string
-    state: boolean
+    name?: string
+    state?: boolean | [number, number]
 }
