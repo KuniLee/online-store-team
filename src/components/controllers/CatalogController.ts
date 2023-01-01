@@ -7,5 +7,8 @@ export class CatalogController {
         this.view.on('GO_TO_ITEM', (path) => {
             this.router.push(path)
         })
+        this.view.on('CHANGE_FILTER', (search) => {
+            this.router.setQueries(search)
+        })
     }
 }

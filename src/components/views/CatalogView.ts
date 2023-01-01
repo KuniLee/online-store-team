@@ -8,7 +8,7 @@ import { target } from 'nouislider'
 import queryString from 'query-string'
 import { Filters } from '@/utils/filters'
 
-type CatalogViewEventsName = 'ITEM_BUTTON_CLICK' | 'GO_TO_ITEM'
+type CatalogViewEventsName = 'ITEM_BUTTON_CLICK' | 'GO_TO_ITEM' | 'CHANGE_FILTER'
 
 export type CatalogViewInstance = InstanceType<typeof CatalogView>
 
@@ -85,7 +85,9 @@ export class CatalogView extends EventEmitter {
                 return true
             }
         })
+        this.buildQueryString()
     }
+
     resetFilterCounters() {
         this.settings.total = 0
         Object.keys(this.settings.brand).forEach((el) => {
@@ -136,7 +138,28 @@ export class CatalogView extends EventEmitter {
             this.settings.brand[brand].total++
             this.settings.category[category].total++
         })
-        console.log(parsedSearch)
-        console.log(this.settings)
+    }
+
+    buildQueryString() {
+        const query: { brand?: Array<string>; category?: Array<string> } = {}
+        for (const brandKey in this.settings.brand) {
+            if (this.settings.brand[brandKey].check) {
+                if (!('brand' in query)) query.brand = [brandKey]
+                else query.brand?.push(brandKey)
+            }
+        }
+        for (const categoryKey in this.settings.category) {
+            if (this.settings.category[categoryKey].check) {
+                if (!('category' in query)) query.category = [categoryKey]
+                else query.category?.push(categoryKey)
+            }
+        }
+        this.emit(
+            'CHANGE_FILTER',
+            queryString.stringify(query, {
+                arrayFormat: 'bracket-separator',
+                arrayFormatSeparator: '|',
+            })
+        )
     }
 }

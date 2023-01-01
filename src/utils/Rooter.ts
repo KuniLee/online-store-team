@@ -18,7 +18,7 @@ export class Router extends EventEmitter {
     constructor() {
         super()
         history.listen(({ location, action }) => {
-            this.processRoutes(location)
+            if (action !== 'REPLACE') this.processRoutes(location)
         })
     }
 
@@ -45,7 +45,7 @@ export class Router extends EventEmitter {
         } else this.push404()
     }
 
-    setQueries() {
-        history.replace({ search: '?q=4' })
+    setQueries(search: string) {
+        history.replace({ search: search })
     }
 }
