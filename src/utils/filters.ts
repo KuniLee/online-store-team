@@ -12,11 +12,13 @@ export class Filters extends EventEmitter {
     private totalEl: Element | null
     private priceFilter: Range | undefined
     private stockFilter: Range | undefined
+    private sortEl: HTMLSelectElement | undefined
 
     constructor(private container: HTMLElement, private settings: FiltersSetting) {
         super()
         this.totalEl = this.container.querySelector('#total')
         this.buildDropdowns()
+        this.buildSorting()
     }
 
     emit(event: FiltersEventsName) {
@@ -66,6 +68,17 @@ export class Filters extends EventEmitter {
         // @ts-ignore
         this.settings[data.id].current = data.state
         this.emit('FILTER_CHANGE')
+    }
+
+    private buildSorting() {
+        this.sortEl = document.querySelector('#sort') as HTMLSelectElement
+        this.sortEl.selectedIndex = ['price:ASC', 'price:DESC', 'sold:ASC', 'sold:DESC'].indexOf(this.settings.sort) + 1
+        this.sortEl.addEventListener('change', () => {
+            if (this.sortEl && this.sortEl.selectedIndex)
+                this.settings.sort = this.sortEl.options[this.sortEl.selectedIndex].value
+            else this.settings.sort = ''
+            this.emit('FILTER_CHANGE')
+        })
     }
 }
 

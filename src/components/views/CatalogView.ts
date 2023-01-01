@@ -21,6 +21,7 @@ export class CatalogView extends EventEmitter {
         price: { min: 0, max: 0 },
         stock: { min: 0, max: 0 },
         total: 0,
+        sort: '',
     }
     private filteredItems: Array<Item> = []
 
@@ -34,11 +35,13 @@ export class CatalogView extends EventEmitter {
                 this.setFilters(search)
                 this.build()
                 this.filterItems()
+                this.sortItems()
                 this.filters?.rebuildFilters()
                 this.rebuildCards()
             }
             this.filters?.on('FILTER_CHANGE', () => {
                 this.filterItems()
+                this.sortItems()
                 this.rebuildCards()
                 this.filters?.rebuildFilters()
             })
@@ -48,14 +51,32 @@ export class CatalogView extends EventEmitter {
     build() {
         this.container.innerHTML = catalogTemplate
         const itemsContainer = this.container.querySelector('#items')
+        const filterContainer = this.container.querySelector('#filters') as HTMLElement
+
         if (itemsContainer)
             itemsContainer.addEventListener('click', (event) => {
                 event.preventDefault()
                 const link = event.composedPath().find((el) => (el as HTMLElement).tagName === 'A')
                 if (link) this.emit('GO_TO_ITEM', new URL((link as HTMLAnchorElement).href).pathname)
             })
-        const filterContainer = this.container.querySelector('#filters') as HTMLElement
+
         this.filters = new Filters(filterContainer, this.settings)
+    }
+
+    sortItems() {
+        if (this.settings.sort !== '') {
+            const funcArr: Array<string> = this.settings.sort.split(':').filter((el, idx) => idx < 2)
+            const sortField: keyof Item = funcArr[0] as keyof Item
+            const sortFunc = funcArr[1]
+            if (sortFunc === 'ASC')
+                this.filteredItems = this.filteredItems.sort(
+                    (a, b) => (a[sortField] as number) - (b[sortField] as number)
+                )
+            if (sortFunc === 'DESC')
+                this.filteredItems = this.filteredItems.sort(
+                    (a, b) => (b[sortField] as number) - (a[sortField] as number)
+                )
+        }
     }
 
     filterItems() {
@@ -117,7 +138,14 @@ export class CatalogView extends EventEmitter {
 
     private setFilters(search: string) {
         const parsedSearch = queryString.parse(search, { arrayFormat: 'bracket-separator', arrayFormatSeparator: '|' })
-        this.settings = { category: {}, brand: {}, price: { min: 0, max: 0 }, stock: { min: 0, max: 0 }, total: 0 }
+        this.settings = {
+            category: {},
+            brand: {},
+            price: { min: 0, max: 0 },
+            stock: { min: 0, max: 0 },
+            total: 0,
+            sort: '',
+        }
         this.model.items.forEach(({ category, brand, price, stock }) => {
             // calculate categories total
             if (!this.settings.category[category])
@@ -141,12 +169,21 @@ export class CatalogView extends EventEmitter {
         if (parsedSearch.stock && Array.isArray(parsedSearch.stock)) {
             this.settings.stock.current = [Number(parsedSearch.stock[0]), Number(parsedSearch.stock[1])]
         }
-        console.log(parsedSearch)
+
+        if (parsedSearch.sort && typeof parsedSearch.sort === 'string') {
+            if (['price:ASC', 'price:DESC', 'sold:ASC', 'sold:DESC'].includes(parsedSearch.sort))
+                this.settings.sort = parsedSearch.sort
+        }
     }
 
     buildQueryString() {
-        const query: { brand?: Array<string>; category?: Array<string>; price?: Array<string>; stock?: Array<string> } =
-            {}
+        const query: {
+            brand?: Array<string>
+            category?: Array<string>
+            price?: Array<string>
+            stock?: Array<string>
+            sort?: string
+        } = {}
         for (const brandKey in this.settings.brand) {
             if (this.settings.brand[brandKey].check) {
                 if (!('brand' in query)) query.brand = [brandKey]
@@ -166,6 +203,8 @@ export class CatalogView extends EventEmitter {
         if (this.settings.stock.current) {
             query.stock = this.settings.stock.current.map((el) => el.toString())
         }
+
+        if (this.settings.sort !== '') query.sort = this.settings.sort
 
         this.emit(
             'CHANGE_FILTER',

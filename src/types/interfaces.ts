@@ -30,6 +30,7 @@ export type DualSlider = {
 }
 
 export interface FiltersSetting {
+    sort: string
     category: Filter
     brand: Filter
     price: DualSlider
