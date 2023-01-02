@@ -1,5 +1,5 @@
 <aside id="filters" class="container mx-auto text-sm">
-    <div class="flex gap-1">
+    <div class="flex gap-1 mb-2 flex-wrap">
       <div id="categoryFilter" class="relative inline-block">
         <button class="border rounded hover:border-gray-700 px-2 py-1">Category
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -59,7 +59,7 @@
         </select>
       </div>
     </div>
-  <div class="flex gap-1 justify-between mb-2">
+  <div class="flex gap-1 justify-between mb-2 flex-wrap-reverse ">
     <div class="flex gap-1">
       <button id="cleanBtn" title="Clean filters" class="border rounded hover:border-gray-700 p-1">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -78,7 +78,7 @@
         </svg>
       </button>
     </div>
-    <div class="inline-block self-end">Found: <span id="total">100</span></div>
+    <div class="inline-block self-center text-base">Found: <span id="total">100</span></div>
     <div class="flex">
   <span class="inline-flex items-center px-2 border border-gray-300 rounded-l">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -95,4 +95,4 @@
 
 </aside>
 <section id="items"
-    class="container xl:grid-cols-4 mx-auto grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5"></section>
+    class="container mx-auto grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5"></section>
