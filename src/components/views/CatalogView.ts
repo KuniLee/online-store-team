@@ -157,6 +157,14 @@ export class CatalogView extends EventEmitter {
             cardContainer?.append(...card.childNodes)
             this.shownCards++
         }
+
+        if (!this.filteredItems.length) {
+            cardContainer?.insertAdjacentHTML(
+                'afterbegin',
+                `<div class="flex col-span-full text-center text-xl h-[150px] place-self-center">
+                      <span class="self-center">Nothing found</span></div>`
+            )
+        }
     }
 
     private showMoreCards() {
@@ -166,7 +174,6 @@ export class CatalogView extends EventEmitter {
             const first = this.shownCards
             const last =
                 this.filteredItems.length >= this.shownCards + 10 ? this.shownCards + 10 : this.filteredItems.length
-            console.log(first, last)
             for (let i = first; i < last; i++) {
                 const card = document.createElement('div')
                 card.innerHTML = cardTemplate({ ...this.filteredItems[i], big: !((i + 1) % 7) })
@@ -278,16 +285,14 @@ export class CatalogView extends EventEmitter {
                 }, timeout)
             }
         }
+
         const checkPosition = () => {
             const height = document.body.offsetHeight
             const screenHeight = window.innerHeight
             const scrolled = window.scrollY
             const threshold = height - screenHeight / 10
             const position = scrolled + screenHeight
-            if (position >= threshold) {
-                console.log('here')
-                this.showMoreCards()
-            }
+            if (position >= threshold) this.showMoreCards()
         }
 
         window.addEventListener('scroll', throttle(checkPosition, 250))
