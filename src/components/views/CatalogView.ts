@@ -6,7 +6,7 @@ import cardTemplate from '@/templates/itemMain.hbs'
 import queryString from 'query-string'
 import { Filters } from '@/utils/filters'
 
-type CatalogViewEventsName = 'ITEM_BUTTON_CLICK' | 'GO_TO_ITEM' | 'CHANGE_FILTER'
+type CatalogViewEventsName = 'ITEM_BUTTON_CLICK' | 'GO_TO_ITEM' | 'CHANGE_FILTER' | 'RESET_FILTER' | 'COPY_FILTER'
 
 export type CatalogViewInstance = InstanceType<typeof CatalogView>
 
@@ -62,6 +62,19 @@ export class CatalogView extends EventEmitter {
             })
 
         this.filters = new Filters(filterContainer, this.settings)
+        ;(filterContainer.querySelector('#cleanBtn') as HTMLButtonElement).onclick = () => {
+            this.emit('RESET_FILTER')
+        }
+        const copyBnt = filterContainer.querySelector('#copyFiltersBtn') as HTMLButtonElement
+        copyBnt.onclick = () => {
+            this.emit('COPY_FILTER')
+            copyBnt.firstElementChild?.classList.add('hidden')
+            copyBnt.lastElementChild?.classList.remove('hidden')
+            setTimeout(() => {
+                copyBnt.firstElementChild?.classList.remove('hidden')
+                copyBnt.lastElementChild?.classList.add('hidden')
+            }, 1000)
+        }
     }
 
     sortItems() {
@@ -122,7 +135,7 @@ export class CatalogView extends EventEmitter {
         })
     }
 
-    emit(event: CatalogViewEventsName, arg: string) {
+    emit(event: CatalogViewEventsName, arg?: string) {
         return super.emit(event, arg)
     }
 

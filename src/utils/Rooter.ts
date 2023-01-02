@@ -22,6 +22,10 @@ export class Router extends EventEmitter {
         })
     }
 
+    getURL() {
+        return window.location.href
+    }
+
     init() {
         this.processRoutes(history.location)
     }

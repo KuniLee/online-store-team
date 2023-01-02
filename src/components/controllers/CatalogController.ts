@@ -10,5 +10,11 @@ export class CatalogController {
         this.view.on('CHANGE_FILTER', (search) => {
             this.router.setQueries(search)
         })
+        this.view.on('RESET_FILTER', () => {
+            this.router.push('/')
+        })
+        this.view.on('COPY_FILTER', () => {
+            navigator.clipboard.writeText(router.getURL())
+        })
     }
 }
