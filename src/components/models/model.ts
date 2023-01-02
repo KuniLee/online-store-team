@@ -7,7 +7,7 @@ type AppModelEventsName = 'CHANGE_PAGE' | 'ITEM_REMOVE'
 export type AppModelInstance = InstanceType<typeof AppModel>
 
 export class AppModel extends EventEmitter {
-    private currentPage: Paths | undefined
+    public currentPage: Paths | undefined
     private catalogItems: Array<Item> = []
     private cartItems: Array<Item> = []
 

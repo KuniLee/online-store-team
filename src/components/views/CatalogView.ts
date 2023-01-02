@@ -43,6 +43,7 @@ export class CatalogView extends EventEmitter {
                 this.addScrollLoader()
             }
             this.filters?.on('FILTER_CHANGE', () => {
+                this.shownCards = 0
                 this.filterItems()
                 this.sortItems()
                 this.rebuildCards()
@@ -65,6 +66,7 @@ export class CatalogView extends EventEmitter {
 
         this.filters = new Filters(filterContainer, this.settings)
         ;(filterContainer.querySelector('#cleanBtn') as HTMLButtonElement).onclick = () => {
+            this.shownCards = 0
             this.emit('RESET_FILTER')
         }
         const copyBnt = filterContainer.querySelector('#copyFiltersBtn') as HTMLButtonElement
@@ -148,16 +150,23 @@ export class CatalogView extends EventEmitter {
     private rebuildCards() {
         const cardContainer = this.container.querySelector('#items')
         if (cardContainer) cardContainer.innerHTML = ''
-        this.shownCards = 0
 
-        const max = this.filteredItems.length > 10 ? 10 : this.filteredItems.length
+        let max
+        if (this.shownCards === 0) {
+            max = this.filteredItems.length > 10 ? 10 : this.filteredItems.length
+            this.shownCards = max
+        } else {
+            if (this.filteredItems.length <= this.shownCards) {
+                max = this.filteredItems.length
+                this.shownCards = this.filteredItems.length
+            } else max = this.shownCards
+        }
+
         for (let i = 0; i < max; i++) {
             const card = document.createElement('div')
             card.innerHTML = cardTemplate({ ...this.filteredItems[i], big: !((i + 1) % 7) })
             cardContainer?.append(...card.childNodes)
-            this.shownCards++
         }
-
         if (!this.filteredItems.length) {
             cardContainer?.insertAdjacentHTML(
                 'afterbegin',
@@ -287,6 +296,7 @@ export class CatalogView extends EventEmitter {
         }
 
         const checkPosition = () => {
+            if (this.model.currentPage !== '/') return
             const height = document.body.offsetHeight
             const screenHeight = window.innerHeight
             const scrolled = window.scrollY
