@@ -25,6 +25,7 @@ export class CatalogView extends EventEmitter {
         sort: '',
     }
     private filteredItems: Array<Item> = []
+    private shownCards = 0
 
     constructor(model: AppModelInstance, container: HTMLElement) {
         super()
@@ -39,6 +40,7 @@ export class CatalogView extends EventEmitter {
                 this.sortItems()
                 this.filters?.rebuildFilters()
                 this.rebuildCards()
+                this.addScrollLoader()
             }
             this.filters?.on('FILTER_CHANGE', () => {
                 this.filterItems()
@@ -146,12 +148,31 @@ export class CatalogView extends EventEmitter {
     private rebuildCards() {
         const cardContainer = this.container.querySelector('#items')
         if (cardContainer) cardContainer.innerHTML = ''
+        this.shownCards = 0
 
         const max = this.filteredItems.length > 10 ? 10 : this.filteredItems.length
         for (let i = 0; i < max; i++) {
             const card = document.createElement('div')
             card.innerHTML = cardTemplate({ ...this.filteredItems[i], big: !((i + 1) % 7) })
             cardContainer?.append(...card.childNodes)
+            this.shownCards++
+        }
+    }
+
+    private showMoreCards() {
+        const cardContainer = this.container.querySelector('#items')
+
+        if (this.shownCards < this.filteredItems.length) {
+            const first = this.shownCards
+            const last =
+                this.filteredItems.length >= this.shownCards + 10 ? this.shownCards + 10 : this.filteredItems.length
+            console.log(first, last)
+            for (let i = first; i < last; i++) {
+                const card = document.createElement('div')
+                card.innerHTML = cardTemplate({ ...this.filteredItems[i], big: !((i + 1) % 7) })
+                cardContainer?.append(...card.childNodes)
+                this.shownCards++
+            }
         }
     }
 
@@ -240,5 +261,36 @@ export class CatalogView extends EventEmitter {
                 arrayFormatSeparator: '|',
             })
         )
+    }
+
+    private addScrollLoader() {
+        function throttle(callee: () => void, timeout: number) {
+            let timer: NodeJS.Timeout | null = null
+
+            return function perform() {
+                if (timer) return
+
+                timer = setTimeout(() => {
+                    callee()
+
+                    clearTimeout(Number(timer))
+                    timer = null
+                }, timeout)
+            }
+        }
+        const checkPosition = () => {
+            const height = document.body.offsetHeight
+            const screenHeight = window.innerHeight
+            const scrolled = window.scrollY
+            const threshold = height - screenHeight / 10
+            const position = scrolled + screenHeight
+            if (position >= threshold) {
+                console.log('here')
+                this.showMoreCards()
+            }
+        }
+
+        window.addEventListener('scroll', throttle(checkPosition, 250))
+        window.addEventListener('resize', throttle(checkPosition, 250))
     }
 }
