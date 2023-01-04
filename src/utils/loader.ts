@@ -16,9 +16,35 @@ export async function getItems(): Promise<Array<Item>> {
     }
 }
 
+export async function getItemsByTag(tag: string, array: Array<string | number>) {
+    const query: Parse.Query = new Parse.Query('Products')
+    query.containedIn(tag, array)
+    try {
+        const results: Parse.Object[] = await query.find()
+        const arrayOfResults = []
+        for (const obj of results) {
+            arrayOfResults.push(obj.attributes)
+        }
+        return arrayOfResults
+    } catch (error: unknown) {
+        console.error('Error while fetching Products', error)
+    }
+}
+
 export async function getItem(article: number) {
     const query: Parse.Query = new Parse.Query('Products')
     query.equalTo('article', article)
+    try {
+        const results: Parse.Object[] = await query.find()
+        return results
+    } catch (error: unknown) {
+        console.error('Error while fetching Products', error)
+    }
+}
+
+export async function checkPromocode(promocode: string) {
+    const query: Parse.Query = new Parse.Query('Promocodes')
+    query.equalTo('Promocode', promocode)
     try {
         const results: Parse.Object[] = await query.find()
         return results

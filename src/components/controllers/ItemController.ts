@@ -19,5 +19,8 @@ export class ItemController {
                 else this.view.build(item)
             }
         })
+        this.view.on('ADD_TO_CART_CLICK', (object: { article: number; price: number }) => {
+            this.model.addToCart(object)
+        })
     }
 }
