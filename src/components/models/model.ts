@@ -3,7 +3,7 @@ import { Paths } from '@/utils/Rooter'
 import { checkPromocode, getItem, getItems, getItemsByTag } from '@/utils/loader'
 import { Item } from 'types/interfaces'
 
-type AppModelEventsName = 'CHANGE_PAGE' | 'ITEM_REMOVE' | 'CART_UPDATE'
+type AppModelEventsName = 'CHANGE_PAGE' | 'ITEM_REMOVE' | 'CART_UPDATE' | 'ITEM_ADDED'
 export type AppModelInstance = InstanceType<typeof AppModel>
 
 export class AppModel extends EventEmitter {
@@ -39,6 +39,7 @@ export class AppModel extends EventEmitter {
         if (!this.catalogItems.length) {
             try {
                 this.catalogItems = await getItems()
+                console.log(1)
             } catch (e) {
                 console.log('error', e)
             }
@@ -66,8 +67,12 @@ export class AppModel extends EventEmitter {
         }
     }
 
-    addToCart(article: number) {
+    async addToCart(article: number) {
+        if (this.catalogItems.length === 0) {
+            await this.getItems()
+        }
         const object = this.catalogItems.find((element: Item) => element.article === article)
+        console.log(this.catalogItems)
         if (object) {
             const localStorageItem = localStorage.getItem('cartArticles')
             const localStorageSum = localStorage.getItem('sumOfCart')
@@ -84,13 +89,14 @@ export class AppModel extends EventEmitter {
                 localStorage.setItem('cartArticles', JSON.stringify(articlesArray))
                 const sum = String(Number(localStorage.getItem('sumOfCart')) + object.price)
                 localStorage.setItem('sumOfCart', sum)
-                this.updateCartIcon()
             } else {
                 const articlesArray = [objectWithItemData]
                 localStorage.setItem('cartArticles', JSON.stringify(articlesArray))
                 localStorage.setItem('sumOfCart', String(object.price))
-                this.updateCartIcon()
             }
+            console.log(article)
+            this.updateCartIcon()
+            this.emit('ITEM_ADDED')
         }
     }
 

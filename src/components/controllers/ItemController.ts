@@ -21,6 +21,7 @@ export class ItemController {
         })
         this.view.on('ADD_TO_CART_CLICK', (article: number) => {
             const resultOfCheckItem = this.model.checkItemInCart(article)
+            console.log(resultOfCheckItem)
             if (resultOfCheckItem) {
                 this.model.deleteFromCart(article)
             } else {

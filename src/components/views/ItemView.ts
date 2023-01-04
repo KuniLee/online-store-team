@@ -83,6 +83,7 @@ export class ItemView extends EventEmitter {
 
     changeButtonAddToCart(checkResult: boolean) {
         const button = document.querySelector('.addToCartButton')
+        console.log(checkResult)
         if (button) {
             const text = button.textContent?.trim()
             if (checkResult && text === 'Add to cart') {
