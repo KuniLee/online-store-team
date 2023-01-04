@@ -5,16 +5,20 @@ import { Router } from '@/utils/Rooter'
 export class CatalogController {
     constructor(private model: AppModelInstance, private view: CatalogViewInstance, private router: Router) {
         this.view.on('GO_TO_ITEM', (path) => {
-            this.router.push(path)
+            this.router.push(path as string)
         })
         this.view.on('CHANGE_FILTER', (search) => {
-            this.router.setQueries(search)
+            this.router.setQueries(search as string)
         })
         this.view.on('RESET_FILTER', () => {
             this.router.push('/')
         })
         this.view.on('COPY_FILTER', () => {
             navigator.clipboard.writeText(router.getURL())
+        })
+        this.view.on('ADD_ITEM_TO_CART', (article) => {
+            const item = this.model.items.find((el) => el.article === article)
+            if (item) this.model.addToCart({ article: item.article, price: item.price })
         })
     }
 }

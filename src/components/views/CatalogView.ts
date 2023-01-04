@@ -6,7 +6,7 @@ import cardTemplate from '@/templates/itemMain.hbs'
 import queryString from 'query-string'
 import { Filters } from '@/utils/filters'
 
-type CatalogViewEventsName = 'ITEM_BUTTON_CLICK' | 'GO_TO_ITEM' | 'CHANGE_FILTER' | 'RESET_FILTER' | 'COPY_FILTER'
+type CatalogViewEventsName = 'ADD_ITEM_TO_CART' | 'GO_TO_ITEM' | 'CHANGE_FILTER' | 'RESET_FILTER' | 'COPY_FILTER'
 
 export type CatalogViewInstance = InstanceType<typeof CatalogView>
 
@@ -139,11 +139,11 @@ export class CatalogView extends EventEmitter {
         })
     }
 
-    emit(event: CatalogViewEventsName, arg?: string) {
+    emit(event: CatalogViewEventsName, arg?: string | number) {
         return super.emit(event, arg)
     }
 
-    on(event: CatalogViewEventsName, callback: (arg: string) => void) {
+    on(event: CatalogViewEventsName, callback: (arg: string | number) => void) {
         return super.on(event, callback)
     }
 
@@ -163,9 +163,7 @@ export class CatalogView extends EventEmitter {
         }
 
         for (let i = 0; i < max; i++) {
-            const card = document.createElement('div')
-            card.innerHTML = cardTemplate({ ...this.filteredItems[i], big: !((i + 1) % 7) })
-            cardContainer?.append(...card.childNodes)
+            cardContainer?.append(...this.createCard(i))
         }
         if (!this.filteredItems.length) {
             cardContainer?.insertAdjacentHTML(
@@ -184,12 +182,21 @@ export class CatalogView extends EventEmitter {
             const last =
                 this.filteredItems.length >= this.shownCards + 10 ? this.shownCards + 10 : this.filteredItems.length
             for (let i = first; i < last; i++) {
-                const card = document.createElement('div')
-                card.innerHTML = cardTemplate({ ...this.filteredItems[i], big: !((i + 1) % 7) })
-                cardContainer?.append(...card.childNodes)
+                cardContainer?.append(...this.createCard(i))
                 this.shownCards++
             }
         }
+    }
+
+    private createCard(idx: number) {
+        const card = document.createElement('div')
+        const item = this.filteredItems[idx]
+        card.innerHTML = cardTemplate({ ...item, big: !((idx + 1) % 7) })
+        const addTCartBtn = card.querySelector('.toCartBtn')
+        addTCartBtn?.addEventListener('click', () => {
+            this.emit('ADD_ITEM_TO_CART', item.article)
+        })
+        return card.childNodes
     }
 
     private setFilters(search: string) {
