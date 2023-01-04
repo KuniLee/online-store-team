@@ -1,6 +1,6 @@
 import EventEmitter from 'events'
 import type { AppModelInstance } from '../models/model'
-import headerTemplate from '@/templates/header.html'
+import headerTemplate from '@/templates/header.hbs'
 import footer from '@/templates/footer.hbs'
 import notFoundTemplate from '@/templates/error_404.html'
 
@@ -22,6 +22,9 @@ export class AppView extends EventEmitter {
 
         model.on('CHANGE_PAGE', (page) => {
             if (page === '/404') this.load404page()
+        })
+        model.on('ITEM_ADDED_TO_CART', (_, args) => {
+            this.cartIconUpdate(args.price)
         })
     }
 
@@ -47,12 +50,29 @@ export class AppView extends EventEmitter {
         const fragment = document.createElement('template')
         const fragmentFooter = document.createElement('template')
         const fragmentHeader = document.createElement('template')
+        const localStorageSum = localStorage.getItem('sumOfCart')
+        const localStorageArrayWithData = localStorage.getItem('cartArticles')
+        let sumOfPrices = 0
+        let countOfItems = 0
+        if (localStorageSum) {
+            sumOfPrices = Number(localStorageSum)
+        }
+        if (localStorageArrayWithData) {
+            const parsedArray = JSON.parse(localStorageArrayWithData)
+            for (const obj of parsedArray) {
+                countOfItems += obj.count
+            }
+        }
 
         fragmentFooter.innerHTML = footer({
             year: new Date().getFullYear(),
             img: require('@/assets/images/rs_school_js.svg'),
         })
-        fragmentHeader.innerHTML = headerTemplate
+        fragmentHeader.innerHTML = headerTemplate({
+            sum: sumOfPrices,
+            numbOfItems: countOfItems,
+            img: require('@/assets/images/logo.svg'),
+        })
         fragment.content.append(this.mainPageContainer, fragmentFooter.content)
         fragment.content.prepend(fragmentHeader.content)
         this.container.append(fragment.content)
@@ -60,6 +80,18 @@ export class AppView extends EventEmitter {
         this.addListeners()
 
         return this.mainPageContainer
+    }
+
+    cartIconUpdate(price: number) {
+        console.log(price, 1)
+        const countItemCart = document.querySelector('.cartIconCount')
+        const sumOfPriceCart = document.querySelector('.sumOfItems')
+        if (countItemCart && sumOfPriceCart) {
+            if (countItemCart.textContent) {
+                countItemCart.textContent = String(Number(countItemCart.textContent) + 1)
+                sumOfPriceCart.textContent = String(Number(sumOfPriceCart.textContent) + price)
+            }
+        }
     }
 
     load404page() {

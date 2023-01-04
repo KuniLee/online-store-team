@@ -3,7 +3,7 @@ import type { AppModelInstance } from '../models/model'
 import itemTemplate from '@/templates/product_page.hbs'
 import { Item } from 'types/interfaces'
 
-type ItemViewEventsName = 'ITEM_BUTTON_CLICK'
+type ItemViewEventsName = 'ITEM_BUTTON_CLICK' | 'ADD_TO_CART_CLICK'
 
 export type ItemViewInstance = InstanceType<typeof ItemView>
 
@@ -61,6 +61,15 @@ export class ItemView extends EventEmitter {
                 target.style.backgroundPosition = `${x}% ${y}%`
             }
         }
+        const addToCartButton = document.querySelector('.addToCartButton')
+        if (addToCartButton) {
+            addToCartButton.addEventListener('click', () => {
+                this.emit('ADD_TO_CART_CLICK', {
+                    article: object.article,
+                    price: object.price,
+                })
+            })
+        }
         const dropMenu = document.querySelector('.drop-menu')
         if (dropMenu) {
             dropMenu.addEventListener('click', () => {
@@ -73,11 +82,11 @@ export class ItemView extends EventEmitter {
         }
     }
 
-    emit(event: ItemViewEventsName) {
-        return super.emit(event)
+    emit(event: ItemViewEventsName, data: { article: number; price: number }) {
+        return super.emit(event, data)
     }
 
-    on(event: ItemViewEventsName, callback: () => void) {
+    on(event: ItemViewEventsName, callback: (data: { article: number; price: number }) => void) {
         return super.on(event, callback)
     }
 }

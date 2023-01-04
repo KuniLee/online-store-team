@@ -1,0 +1,32 @@
+<section class="w-screen h-screen bg-black/60 flex justify-center items-center">
+  <div class="w-1/2 border-2 border-black rounded-2xl bg-white flex justify-center">
+    <div class="flex w-[95%] justify-between flex-col text-center">
+      <h2>Personal details</h2>
+      <div>
+        <label for="name">Name: </label>
+        <input class="text-center" type="text" placeholder="Name" name="name" id="name" pattern='/[А-яA-z]{3,}/' required>
+      </div>
+      <div>
+        <label for="number">Phone number: </label>
+        <input class="text-center" type="number" placeholder="Phone number" name="number" id="number" required>
+      </div>
+      <div>
+        <label for="address">Delivery address: </label>
+        <input class="text-center" type="text" placeholder="Delivery address" name="address" id="address" required>
+      </div>
+      <div>
+        <label for="email">Email: </label>
+        <input class="text-center" type="email" name="email" id="email" placeholder="email" pattern="/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/" required>
+      </div>
+      <h2>Credit card details</h2>
+      <div>
+        <input placeholder="Card number" type="number" name="cardNumber" id="cardNumber">
+        <div>
+          <input placeholder="Valid Thru" type="number" name="validNumber">
+          <input type="number" placeholder="CVV" name="CVV">
+        </div>
+      </div>
+      <button type="submit">123</button>
+    </div>
+  </div>
+</section>

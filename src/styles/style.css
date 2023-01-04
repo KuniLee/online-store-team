@@ -1,5 +1,5 @@
 @import './style.base.css';
-/*@import './components.css';*/
+@import './components.css';
 
 @tailwind components;
 @tailwind utilities;
@@ -87,4 +87,148 @@
 
 .main-photo-container {
     background-position: 50% 50%;
+}
+
+@layer base {
+    .modal-open {
+        left: 0 !important;
+    }
+
+    .modalGrid {
+        display: grid;
+        max-width: 612px;
+        gap: 10px;
+        grid-template-areas:
+                            'modalHead modalHead'
+                            'labelName inputName'
+                            'empty-1 errorName'
+                            'labelPhone inputPhone'
+                            'empty-2 errorPhone'
+                            'labelAddress inputAddress'
+                            'empty-3 errorAddress'
+                            'labelEmail inputEmail'
+                            'empty-4 errorEmail'
+                            'cardHead cardHead'
+                            'cardInfo cardInfo'
+                            'submitButton submitButton';
+        grid-template-columns: 200px 400px;
+    }
+
+    .modalNameInput {
+        grid-area: inputName;
+    }
+
+    .modalNameLabel {
+        grid-area: labelName;
+    }
+
+    .modalNameError {
+        grid-area: errorName;
+    }
+
+    .modalPhoneInput {
+        grid-area: inputPhone;
+    }
+
+    .modalPhoneLabel {
+        grid-area: labelPhone;
+    }
+
+    .modalPhoneError {
+        grid-area: errorPhone;
+    }
+
+    .modalAddressInput {
+        grid-area: inputAddress;
+    }
+
+    .modalAddressLabel {
+        grid-area: labelAddress;
+    }
+
+    .modalAddressError {
+        grid-area: errorAddress;
+    }
+
+    .modalEmailInput {
+        grid-area: inputEmail;
+    }
+
+    .modalEmailLabel {
+        grid-area: labelEmail;
+    }
+
+    .modalEmailError {
+        grid-area: errorEmail;
+    }
+
+    .modalHead {
+        grid-area: modalHead;
+    }
+
+    .modalCardHead {
+        grid-area: cardHead;
+    }
+
+    .cardInformation {
+        grid-area: cardInfo;
+    }
+
+    .modalSubmitButton {
+        grid-area: submitButton;
+    }
+
+    .modalNameInput:valid,
+    .modalEmailInput:valid,
+    .modalPhoneInput:valid,
+    .modalAddressInput:valid,
+    .modalCvvInput:valid,
+    .cardNumber:valid,
+    .cardData:valid {
+        border-color: rgba(0, 255, 0, 0.5);
+    }
+
+    input:focus {
+        outline: none;
+    }
+
+    .modalNameInput:invalid,
+    .modalEmailInput:invalid,
+    .modalPhoneInput:invalid,
+    .modalAddressInput:invalid,
+    .modalCvvInput:invalid,
+    .cardNumber:invalid,
+    .cardData:invalid {
+        border-color: rgba(255, 0, 0, 0.5);
+    }
+
+    .modalCvvInput {
+        -webkit-text-security: disc;
+    }
+
+    .modalCvvInput::-webkit-outer-spin-button,
+    .modalCvvInput::-webkit-inner-spin-button,
+    .cardNumber::-webkit-outer-spin-button,
+    .cardNumber::-webkit-inner-spin-button{
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .systemsSprite {
+        background: url('@/assets/images/bank-sprite.png') no-repeat;
+        background-size: cover;
+        background-position: 45px 0;
+    }
+
+    .systemsSprite.visa {
+        background-position: 3px 0;
+    }
+
+    .systemsSprite.masterCard {
+        background-position: -37px 0;
+    }
+
+    .systemsSprite.express {
+        background-position: -115px 0;
+    }
 }

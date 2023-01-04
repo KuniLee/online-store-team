@@ -22,5 +22,5 @@ const itemView = new ItemView(model, mainContainer)
 
 const catalogController = new CatalogController(model, catalogView, router)
 const itemController = new ItemController(model, itemView, router)
-const cartController = new CartController(model, cartView)
+const cartController = new CartController(model, cartView, router)
 const controller = new AppController(model, appView, router)

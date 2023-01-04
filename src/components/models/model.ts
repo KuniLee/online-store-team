@@ -1,17 +1,14 @@
 import EventEmitter from 'events'
 import { Paths } from '@/utils/Rooter'
-import { getItems, getItem } from '@/utils/loader'
-import { Filters, Item } from 'types/interfaces'
+import { checkPromocode, getItem, getItems, getItemsByTag } from '@/utils/loader'
+import { Item } from 'types/interfaces'
 
-type AppModelEventsName = 'CHANGE_PAGE' | 'ITEM_REMOVE'
+type AppModelEventsName = 'CHANGE_PAGE' | 'ITEM_REMOVE' | 'ITEM_ADDED_TO_CART'
 export type AppModelInstance = InstanceType<typeof AppModel>
 
 export class AppModel extends EventEmitter {
-    private currentPage: Paths | undefined
+    public currentPage: Paths | undefined
     private catalogItems: Array<Item> = []
-    private catalogItemsFiltered: Array<Item> = []
-    private cartItems: Array<Item> = []
-    private filters: Filters = { category: {}, brand: {}, price: {}, stock: {} }
 
     constructor() {
         super()
@@ -21,17 +18,18 @@ export class AppModel extends EventEmitter {
         return this.catalogItems
     }
 
-    changePage(page: Paths, args?: string) {
+    changePage(page: Paths, args?: { path: string; search: string }) {
         this.currentPage = page
         console.log(this.currentPage)
         switch (page) {
             case '/':
                 this.getItems().then(() => {
-                    this.emit('CHANGE_PAGE', page)
+                    this.emit('CHANGE_PAGE', page, args)
                 })
                 break
             case '/item':
             case '/404':
+            case '/cart':
                 this.emit('CHANGE_PAGE', page, args)
                 break
         }
@@ -45,21 +43,6 @@ export class AppModel extends EventEmitter {
                 console.log('error', e)
             }
         }
-        this.catalogItems.forEach(({ category, brand, price, stock }) => {
-            // calculate categories total
-            if (!this.filters.category[category]) this.filters.category[category] = { total: 0, count: 0 }
-            // calculate categories brands
-            if (!this.filters.brand[brand]) this.filters.brand[brand] = { total: 0, count: 0 }
-
-            if (!this.filters.price.min || this.filters.price.min > price) this.filters.price.min = price
-            if (!this.filters.price.max || this.filters.price.max < price) this.filters.price.max = price
-            if (!this.filters.stock.min || this.filters.stock.min > price) this.filters.stock.min = stock
-            if (!this.filters.stock.max || this.filters.stock.max < price) this.filters.stock.max = stock
-
-            this.filters.brand[brand].total++
-            this.filters.category[category].total++
-        })
-        console.log(this.filters)
     }
 
     async getItem(article: number) {
@@ -73,11 +56,65 @@ export class AppModel extends EventEmitter {
         }
     }
 
-    emit(event: AppModelEventsName, data?: Paths, article?: string) {
-        return super.emit(event, data, article)
+    async getItemsByArticles(articles: Array<number>) {
+        if (articles) {
+            try {
+                return await getItemsByTag('article', articles)
+            } catch (er) {
+                console.error(er)
+            }
+        }
     }
 
-    on(event: AppModelEventsName, callback: (data: Paths, args: { path: string }) => void) {
+    addToCart(object: { article: number; price: number }) {
+        console.log(object)
+        const localStorageItem = localStorage.getItem('cartArticles')
+        const localStorageSum = localStorage.getItem('sumOfCart')
+        const objectWithItemData = {
+            article: object.article,
+            count: 1,
+        }
+        if (!localStorageSum) {
+            localStorage.setItem('sumOfCart', '0')
+        }
+        if (localStorageItem) {
+            const articlesArray = JSON.parse(localStorageItem)
+            for (const item of articlesArray) {
+                if (JSON.stringify(item) === JSON.stringify(objectWithItemData)) {
+                    return
+                }
+            }
+            articlesArray.push(objectWithItemData)
+            localStorage.setItem('cartArticles', JSON.stringify(articlesArray))
+            const sum = String(Number(localStorage.getItem('sumOfCart')) + object.price)
+            localStorage.setItem('sumOfCart', sum)
+            this.emit('ITEM_ADDED_TO_CART', undefined, { price: object.price })
+        } else {
+            const articlesArray = [objectWithItemData]
+            localStorage.setItem('cartArticles', JSON.stringify(articlesArray))
+            localStorage.setItem('sumOfCart', String(object.price))
+            this.emit('ITEM_ADDED_TO_CART', undefined, { price: object.price })
+        }
+    }
+    async checkPromo(data: string) {
+        if (data) {
+            try {
+                const result = await checkPromocode(data)
+                return JSON.parse(JSON.stringify(result))[0]
+            } catch (er) {
+                console.error(er)
+            }
+        }
+    }
+
+    emit(event: AppModelEventsName, data?: Paths, args?: { path?: string; search?: string; price?: number }) {
+        return super.emit(event, data, args)
+    }
+
+    on(
+        event: AppModelEventsName,
+        callback: (data: Paths, args: { path: string; search: string; price: number }) => void
+    ) {
         return super.on(event, callback)
     }
 }

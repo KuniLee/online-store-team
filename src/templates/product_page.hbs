@@ -20,7 +20,7 @@
     </figure>
     <div class="carousel-photo flex justify-between">
       {{#each object.images}}
-      <img class="small-photo w-[18%] cursor-pointer" src="{{this}}&fit=constrain" data-index="{{@index}}">
+      <img class="small-photo w-[18%] cursor-pointer" alt="{{object.title}}" src="{{this}}&fit=constrain" data-index="{{@index}}">
       {{/each}}
     </div>
   </div>
@@ -40,7 +40,7 @@
       <p class="mr-4 font-HelveticaNeueCyr font-normal text-[16px] leading-[1.1] mb-4">Last updated: {{date}}</p>
     </div>
     <div class="flex justify-between items-center mb-[60px]">
-      <button type="button" class="w-[48%] h-[53px] bg-black flex items-center justify-center text-white font-Arial font-normal text-[16px] leading-snug">
+      <button type="button" class="addToCartButton w-[48%] h-[53px] bg-black flex items-center justify-center text-white font-Arial font-normal text-[16px] leading-snug">
         Add to cart
       </button>
       <button type="button" class="w-[48%] h-[53px] bg-black flex items-center justify-center text-white font-Arial font-normal text-[16px] leading-snug">
