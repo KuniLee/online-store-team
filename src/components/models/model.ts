@@ -134,12 +134,21 @@ export class AppModel extends EventEmitter {
 
     deleteFromCart(article: number) {
         const localStorageArray = localStorage.getItem('cartArticles')
-        if (localStorageArray) {
+        const localStorageSum = localStorage.getItem('sumOfCart')
+        if (localStorageArray && localStorageSum) {
             const countOfItemsHeader = document.querySelector('.countOfItems')
+
             const tempArray = JSON.parse(localStorageArray)
             for (let i = 0; i < tempArray.length; i++) {
                 if (article === tempArray[i].article) {
-                    tempArray.splice(i, 1)
+                    const deletedItem = tempArray.splice(i, 1)
+                    const itemObject = this.catalogItems.find((element) => element.article === article)
+                    if (itemObject) {
+                        localStorage.setItem(
+                            'sumOfCart',
+                            String(Number(localStorageSum) - Number(itemObject.price) * Number(deletedItem[0].count))
+                        )
+                    }
                     break
                 }
             }
