@@ -3,7 +3,7 @@ import { Paths } from '@/utils/Rooter'
 import { checkPromocode, getItem, getItems, getItemsByTag } from '@/utils/loader'
 import { Item } from 'types/interfaces'
 
-type AppModelEventsName = 'CHANGE_PAGE' | 'ITEM_REMOVE' | 'ITEM_ADDED_TO_CART'
+type AppModelEventsName = 'CHANGE_PAGE' | 'ITEM_REMOVE' | 'CART_UPDATE'
 export type AppModelInstance = InstanceType<typeof AppModel>
 
 export class AppModel extends EventEmitter {
@@ -66,34 +66,88 @@ export class AppModel extends EventEmitter {
         }
     }
 
-    addToCart(object: { article: number; price: number }) {
-        console.log(object)
+    addToCart(article: number) {
+        const object = this.catalogItems.find((element: Item) => element.article === article)
+        if (object) {
+            const localStorageItem = localStorage.getItem('cartArticles')
+            const localStorageSum = localStorage.getItem('sumOfCart')
+            const objectWithItemData = {
+                article: object.article,
+                count: 1,
+            }
+            if (!localStorageSum) {
+                localStorage.setItem('sumOfCart', '0')
+            }
+            if (localStorageItem && !this.checkItemInCart(object.article)) {
+                const articlesArray = JSON.parse(localStorageItem)
+                articlesArray.push(objectWithItemData)
+                localStorage.setItem('cartArticles', JSON.stringify(articlesArray))
+                const sum = String(Number(localStorage.getItem('sumOfCart')) + object.price)
+                localStorage.setItem('sumOfCart', sum)
+                this.updateCartIcon()
+            } else {
+                const articlesArray = [objectWithItemData]
+                localStorage.setItem('cartArticles', JSON.stringify(articlesArray))
+                localStorage.setItem('sumOfCart', String(object.price))
+                this.updateCartIcon()
+            }
+        }
+    }
+
+    updateCartIcon() {
+        const items = localStorage.getItem('cartArticles')
+        const sum = localStorage.getItem('sumOfCart')
+        if (items) {
+            const arrayWithItems = JSON.parse(items)
+            const results = arrayWithItems.reduce(
+                (acc: { count: number; price: number }, el: { article: number; count: number }) => {
+                    const itemFromCatalog = this.catalogItems.find((element: Item) => element.article === el.article)
+                    if (itemFromCatalog) {
+                        acc.count += el.count
+                        acc.price += itemFromCatalog.price * el.count
+                    }
+                    return acc
+                },
+                {
+                    count: 0,
+                    price: 0,
+                }
+            )
+            this.emit('CART_UPDATE', undefined, undefined, results)
+        } else {
+            this.emit('CART_UPDATE', undefined, undefined, { count: 0, price: 0 })
+        }
+    }
+
+    checkItemInCart(article: number) {
         const localStorageItem = localStorage.getItem('cartArticles')
-        const localStorageSum = localStorage.getItem('sumOfCart')
-        const objectWithItemData = {
-            article: object.article,
-            count: 1,
-        }
-        if (!localStorageSum) {
-            localStorage.setItem('sumOfCart', '0')
-        }
         if (localStorageItem) {
             const articlesArray = JSON.parse(localStorageItem)
             for (const item of articlesArray) {
-                if (JSON.stringify(item) === JSON.stringify(objectWithItemData)) {
-                    return
+                if (item.article === article) {
+                    return true
                 }
             }
-            articlesArray.push(objectWithItemData)
-            localStorage.setItem('cartArticles', JSON.stringify(articlesArray))
-            const sum = String(Number(localStorage.getItem('sumOfCart')) + object.price)
-            localStorage.setItem('sumOfCart', sum)
-            this.emit('ITEM_ADDED_TO_CART', undefined, { price: object.price })
-        } else {
-            const articlesArray = [objectWithItemData]
-            localStorage.setItem('cartArticles', JSON.stringify(articlesArray))
-            localStorage.setItem('sumOfCart', String(object.price))
-            this.emit('ITEM_ADDED_TO_CART', undefined, { price: object.price })
+        }
+        return false
+    }
+
+    deleteFromCart(article: number) {
+        const localStorageArray = localStorage.getItem('cartArticles')
+        if (localStorageArray) {
+            const countOfItemsHeader = document.querySelector('.countOfItems')
+            const tempArray = JSON.parse(localStorageArray)
+            for (let i = 0; i < tempArray.length; i++) {
+                if (article === tempArray[i].article) {
+                    tempArray.splice(i, 1)
+                    break
+                }
+            }
+            if (countOfItemsHeader) {
+                countOfItemsHeader.textContent = tempArray.length
+            }
+            localStorage.setItem('cartArticles', JSON.stringify(tempArray))
+            this.updateCartIcon()
         }
     }
     async checkPromo(data: string) {
@@ -107,13 +161,22 @@ export class AppModel extends EventEmitter {
         }
     }
 
-    emit(event: AppModelEventsName, data?: Paths, args?: { path?: string; search?: string; price?: number }) {
-        return super.emit(event, data, args)
+    emit(
+        event: AppModelEventsName,
+        data?: Paths,
+        args?: { path?: string; search?: string },
+        cartObj?: { count: number; price: number }
+    ) {
+        return super.emit(event, data, args, cartObj)
     }
 
     on(
         event: AppModelEventsName,
-        callback: (data: Paths, args: { path: string; search: string; price: number }) => void
+        callback: (
+            data: Paths,
+            args: { path: string; search: string },
+            cartObj: { count: number; price: number }
+        ) => void
     ) {
         return super.on(event, callback)
     }

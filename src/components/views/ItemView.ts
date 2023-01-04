@@ -3,7 +3,7 @@ import type { AppModelInstance } from '../models/model'
 import itemTemplate from '@/templates/product_page.hbs'
 import { Item } from 'types/interfaces'
 
-type ItemViewEventsName = 'ITEM_BUTTON_CLICK' | 'ADD_TO_CART_CLICK'
+type ItemViewEventsName = 'ITEM_BUTTON_CLICK' | 'ADD_TO_CART_CLICK' | 'CHECK_ITEM_IN_CART'
 
 export type ItemViewInstance = InstanceType<typeof ItemView>
 
@@ -19,7 +19,7 @@ export class ItemView extends EventEmitter {
 
     build(object: Item) {
         const dateObj = new Date(object.updatedAt)
-        const date = `${dateObj.getDate()}-${dateObj.getMonth()}-${dateObj.getFullYear()}`
+        const date = `${dateObj.getDate()}-${dateObj.getMonth() + 1}-${dateObj.getFullYear()}`
         this.container.innerHTML = itemTemplate({
             object,
             date: date,
@@ -61,13 +61,12 @@ export class ItemView extends EventEmitter {
                 target.style.backgroundPosition = `${x}% ${y}%`
             }
         }
+        this.emit('CHECK_ITEM_IN_CART', object.article)
         const addToCartButton = document.querySelector('.addToCartButton')
         if (addToCartButton) {
             addToCartButton.addEventListener('click', () => {
-                this.emit('ADD_TO_CART_CLICK', {
-                    article: object.article,
-                    price: object.price,
-                })
+                this.emit('ADD_TO_CART_CLICK', object.article)
+                this.emit('CHECK_ITEM_IN_CART', object.article)
             })
         }
         const dropMenu = document.querySelector('.drop-menu')
@@ -82,11 +81,24 @@ export class ItemView extends EventEmitter {
         }
     }
 
-    emit(event: ItemViewEventsName, data: { article: number; price: number }) {
-        return super.emit(event, data)
+    changeButtonAddToCart(checkResult: boolean) {
+        const button = document.querySelector('.addToCartButton')
+        if (button) {
+            const text = button.textContent?.trim()
+            if (checkResult && text === 'Add to cart') {
+                button.textContent = 'Remove from cart'
+            }
+            if (!checkResult && text === 'Remove from cart') {
+                button.textContent = 'Add to cart'
+            }
+        }
     }
 
-    on(event: ItemViewEventsName, callback: (data: { article: number; price: number }) => void) {
+    emit(event: ItemViewEventsName, article: number) {
+        return super.emit(event, article)
+    }
+
+    on(event: ItemViewEventsName, callback: (article: number) => void) {
         return super.on(event, callback)
     }
 }

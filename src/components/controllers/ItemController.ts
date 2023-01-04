@@ -19,8 +19,17 @@ export class ItemController {
                 else this.view.build(item)
             }
         })
-        this.view.on('ADD_TO_CART_CLICK', (object: { article: number; price: number }) => {
-            this.model.addToCart(object)
+        this.view.on('ADD_TO_CART_CLICK', (article: number) => {
+            const resultOfCheckItem = this.model.checkItemInCart(article)
+            if (resultOfCheckItem) {
+                this.model.deleteFromCart(article)
+            } else {
+                this.model.addToCart(article)
+            }
+        })
+        this.view.on('CHECK_ITEM_IN_CART', (article: number) => {
+            const resultOfCheckItem = this.model.checkItemInCart(article)
+            this.view.changeButtonAddToCart(resultOfCheckItem)
         })
     }
 }
