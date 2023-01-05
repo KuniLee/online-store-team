@@ -23,8 +23,8 @@ export class AppView extends EventEmitter {
         model.on('CHANGE_PAGE', (page) => {
             if (page === '/404') this.load404page()
         })
-        model.on('ITEM_ADDED_TO_CART', (_, args) => {
-            this.cartIconUpdate(args.price)
+        model.on('CART_UPDATE', (_, args, cartObj) => {
+            this.cartIconUpdate(cartObj)
         })
     }
 
@@ -82,14 +82,14 @@ export class AppView extends EventEmitter {
         return this.mainPageContainer
     }
 
-    cartIconUpdate(price: number) {
-        console.log(price, 1)
+    cartIconUpdate(cartObj: { count: number; price: number }) {
+        console.log(cartObj)
         const countItemCart = document.querySelector('.cartIconCount')
         const sumOfPriceCart = document.querySelector('.sumOfItems')
         if (countItemCart && sumOfPriceCart) {
             if (countItemCart.textContent) {
-                countItemCart.textContent = String(Number(countItemCart.textContent) + 1)
-                sumOfPriceCart.textContent = String(Number(sumOfPriceCart.textContent) + price)
+                countItemCart.textContent = String(cartObj.count)
+                sumOfPriceCart.textContent = String(cartObj.price)
             }
         }
     }

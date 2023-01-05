@@ -1,0 +1,18 @@
+<div class="relative group flex font-HelveticaNeueCyr">
+  <a class="" href="item/{{article}}">
+    <img class="object-cover max-w-[100px]" src="{{images.[0]}}&fit=constrain" alt="{{title}}">
+  </a>
+  <div class="mx-2 flex flex-col font-HelveticaNeueCyr sm:text-lg text-sm text-black leading-5 flex-grow self-end">
+    <p class="font-bold">{{title}}</p>
+    <p class="">{{description}}</p>
+    <p class="font-bold mt-2">{{price}}<span>₽</span></p>
+  </div>
+  <div class="toCartBtn group-hover:animate-pulse cursor-pointer self-center">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="{{#if added}}hidden{{/if}} sm:w-10 sm:h-10 w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#9E0016" class="{{#unless added}}hidden{{/unless}} sm:w-10 sm:h-10 w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+    </svg>
+  </div>
+</div>
