@@ -13,10 +13,12 @@ export class Filters extends EventEmitter {
     private priceFilter: Range | undefined
     private stockFilter: Range | undefined
     private sortEl: HTMLSelectElement | undefined
+    private viewBtn: Button
 
     constructor(private container: HTMLElement, private settings: FiltersSetting) {
         super()
         this.totalEl = this.container.querySelector('#total')
+        this.viewBtn = new Button(this.container.querySelector('#viewBtn'), this.onchangeView.bind(this))
         this.buildDropdowns()
         this.buildSorting()
         this.buildSearch()
@@ -31,6 +33,7 @@ export class Filters extends EventEmitter {
     }
 
     rebuildFilters() {
+        this.viewBtn.change(this.settings.view)
         this.categoryFilter?.setFields(this.settings.category)
         this.brandFilter?.setFields(this.settings.brand)
         this.priceFilter?.setFields(this.settings.price)
@@ -57,6 +60,13 @@ export class Filters extends EventEmitter {
             'stock',
             this.onchangeRange.bind(this)
         )
+    }
+
+    onchangeView(data: DataFromFilter) {
+        if (typeof data.state === 'string') {
+            this.settings.view = data.state
+        }
+        this.emit('FILTER_CHANGE')
     }
 
     onchangeMenu(data: DataFromFilter) {
@@ -191,5 +201,33 @@ class Menu extends Dropdown {
 type DataFromFilter = {
     id: string
     name?: string
-    state?: boolean | [number, number]
+    state?: boolean | [number, number] | string
+}
+
+class Button {
+    private state = 'cols'
+    constructor(public element: Element | null, protected callback: (data: DataFromFilter) => void) {
+        this.element?.addEventListener('click', () => {
+            if (this.state === 'list') {
+                this.callback({ id: 'view', state: 'cols' })
+                return
+            }
+            if (this.state === 'cols') {
+                this.callback({ id: 'view', state: 'list' })
+                return
+            }
+        })
+    }
+
+    change(state: string) {
+        this.state = state
+        if (state === 'list') {
+            this.element?.firstElementChild?.classList.add('hidden')
+            this.element?.lastElementChild?.classList.remove('hidden')
+        }
+        if (state === 'cols') {
+            this.element?.firstElementChild?.classList.remove('hidden')
+            this.element?.lastElementChild?.classList.add('hidden')
+        }
+    }
 }

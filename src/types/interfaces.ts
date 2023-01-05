@@ -37,4 +37,5 @@ export interface FiltersSetting {
     price: DualSlider
     stock: DualSlider
     total: number
+    view: string
 }

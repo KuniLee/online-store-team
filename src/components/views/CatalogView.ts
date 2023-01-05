@@ -2,7 +2,8 @@ import EventEmitter from 'events'
 import type { AppModelInstance } from '../models/model'
 import catalogTemplate from '@/templates/catalog.html'
 import { FiltersSetting, Item } from 'types/interfaces'
-import cardTemplate from '@/templates/itemMain.hbs'
+import cardTemplate from '@/templates/itemCard.hbs'
+import cardTemplateList from '@/templates/itemList.hbs'
 import queryString from 'query-string'
 import { Filters } from '@/utils/filters'
 
@@ -29,6 +30,7 @@ export class CatalogView extends EventEmitter {
         total: 0,
         search: null,
         sort: '',
+        view: '',
     }
     private filteredItems: Array<Item> = []
     private shownCards = 0
@@ -154,7 +156,12 @@ export class CatalogView extends EventEmitter {
     }
 
     private rebuildCards() {
-        const cardContainer = this.container.querySelector('#items')
+        const cardContainer = this.container.querySelector('#items') as HTMLElement
+        if (this.settings.view === 'list') cardContainer.className = 'container mx-auto flex flex-col gap-3'
+        else
+            cardContainer.className =
+                'container mx-auto grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5'
+
         if (cardContainer) cardContainer.innerHTML = ''
 
         let max
@@ -197,20 +204,26 @@ export class CatalogView extends EventEmitter {
     private createCard(idx: number) {
         const card = document.createElement('div')
         const item = this.filteredItems[idx]
-        card.innerHTML = cardTemplate({
-            ...item,
-            big: !((idx + 1) % 7),
-            added: this.model.checkItemInCart(item.article),
-        })
+        if (this.settings.view === 'list') {
+            card.innerHTML = cardTemplateList({
+                ...item,
+                added: this.model.checkItemInCart(item.article),
+            })
+        } else
+            card.innerHTML = cardTemplate({
+                ...item,
+                big: !((idx + 1) % 7),
+                added: this.model.checkItemInCart(item.article),
+            })
         const addTCartBtn = card.querySelector('.toCartBtn')
         addTCartBtn?.addEventListener('click', () => {
             if (this.model.checkItemInCart(item.article)) {
-                addTCartBtn.classList.add('invisible')
+                if (this.settings.view === 'cols') addTCartBtn.classList.add('invisible')
                 addTCartBtn.lastElementChild?.classList.add('hidden')
                 addTCartBtn.firstElementChild?.classList.remove('hidden')
                 this.emit('REMOVE_ITEM_FROM_CART', item.article)
             } else {
-                addTCartBtn.classList.remove('invisible')
+                if (this.settings.view === 'cols') addTCartBtn.classList.remove('invisible')
                 addTCartBtn.lastElementChild?.classList.remove('hidden')
                 addTCartBtn.firstElementChild?.classList.add('hidden')
                 this.emit('ADD_ITEM_TO_CART', item.article)
@@ -229,6 +242,7 @@ export class CatalogView extends EventEmitter {
             total: 0,
             search: null,
             sort: '',
+            view: 'cols',
         }
         this.model.items.forEach(({ category, brand, price, stock }) => {
             // calculate categories total
@@ -262,6 +276,9 @@ export class CatalogView extends EventEmitter {
         if (parsedSearch.search && typeof parsedSearch.search === 'string') {
             this.settings.search = parsedSearch.search
         }
+        if (parsedSearch.view && typeof parsedSearch.view === 'string') {
+            if (['list'].includes(parsedSearch.view)) this.settings.view = parsedSearch.view
+        }
     }
 
     buildQueryString() {
@@ -272,6 +289,7 @@ export class CatalogView extends EventEmitter {
             stock?: Array<string>
             sort?: string
             search?: string
+            view?: string
         } = {}
         for (const brandKey in this.settings.brand) {
             if (this.settings.brand[brandKey].check) {
@@ -296,6 +314,8 @@ export class CatalogView extends EventEmitter {
         if (this.settings.sort !== '') query.sort = this.settings.sort
 
         if (this.settings.search) query.search = this.settings.search
+
+        if (this.settings.view !== 'cols') query.view = this.settings.view
 
         this.emit(
             'CHANGE_FILTER',
