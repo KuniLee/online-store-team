@@ -320,7 +320,6 @@ export class CartView extends EventEmitter {
             const totalDiscountBlock = document.querySelector('.totalDiscount')
             let totalDisc = 0
             const disc = (Number(totalPriceField) * discount) / 100
-            console.log(disc)
             if (totalDiscountFields) {
                 for (const element of totalDiscountFields) {
                     const discount = element.querySelector('.cartDiscount')?.textContent
@@ -434,6 +433,14 @@ export class CartView extends EventEmitter {
                 }
                 localStorage.setItem('cartArticles', JSON.stringify(tempArray))
             }
+        }
+    }
+    updateLimitAndPageFields(page: number, limit: number) {
+        const pageField = document.querySelector('.cartPageQuery')
+        const cartLimitField = document.querySelector('.cartLimitQuery') as HTMLInputElement
+        if (pageField && cartLimitField) {
+            pageField.textContent = String(page)
+            cartLimitField.value = String(limit)
         }
     }
 
