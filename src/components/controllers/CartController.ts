@@ -111,6 +111,10 @@ export class CartController {
         this.view.on('SUCCESS_BUY', () => {
             this.view.successBuy()
         })
+        this.view.on('CART_CHANGE', async (article?: string) => {
+            const totalSum = await this.model.changeCart(article)
+            this.view.updateCartInformation(Number(totalSum))
+        })
     }
 
     updateQuery(limitCount: string, pageCount: string) {

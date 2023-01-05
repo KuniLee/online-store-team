@@ -15,6 +15,7 @@ type CartViewEventsName =
     | 'BUTTON_BUY_CLICK'
     | 'CLOSE_MODAL'
     | 'SUCCESS_BUY'
+    | 'CART_CHANGE'
 
 export type CartViewInstance = InstanceType<typeof CartView>
 export type ItemData = {
@@ -84,7 +85,6 @@ export class CartView extends EventEmitter {
             this.updateCart()
             cartItems?.forEach((el) => {
                 el.addEventListener('click', (e) => {
-                    this.emit('CART_ITEM_CLICK')
                     const target = e.target as HTMLElement
                     if (target.closest('.cartDeleteBtn')) {
                         this.deleteCartItem(el)
@@ -104,7 +104,7 @@ export class CartView extends EventEmitter {
                                     countField.textContent = String(countResult)
                                     if (cartPrice && price) {
                                         cartPrice.textContent = String(Number(price) * countResult)
-                                        this.updateCartInfo(Number(article), Number(price), 'minus')
+                                        this.emit('CART_CHANGE')
                                     }
                                 }
                             }
@@ -115,7 +115,7 @@ export class CartView extends EventEmitter {
                                 countField.textContent = String(countResult)
                                 if (cartPrice && price) {
                                     cartPrice.textContent = String(Number(price) * countResult)
-                                    this.updateCartInfo(Number(article), Number(price), 'plus')
+                                    this.emit('CART_CHANGE')
                                 }
                             }
                         }
@@ -338,6 +338,7 @@ export class CartView extends EventEmitter {
             blockFragment.innerHTML = promoBlock({
                 promocodeName: name,
                 discount: disc,
+                discountData: discount,
             })
             if (discountField && summaryField && totalDiscountBlock && totalPriceField) {
                 totalDiscountBlock.after(blockFragment.content)
@@ -357,11 +358,9 @@ export class CartView extends EventEmitter {
 
     deleteCartItem(el: Element) {
         const element = el as HTMLElement
-        const price = Number(element.querySelector('.cartItemPrice')?.textContent)
-        const countOfElement = el.querySelector('.countNumber')?.textContent
-        const count = countOfElement ? countOfElement : 1
-        this.updateCartInfo(Number(element.dataset.article), price, 'delete', Number(count))
+        const article = element.dataset.article
         el.remove()
+        this.emit('CART_CHANGE', article)
         const items = document.querySelectorAll('.cartItem.hidden')
         const cartItems = document.querySelectorAll('.cartItem')
         if (items.length === cartItems.length) {
@@ -372,69 +371,7 @@ export class CartView extends EventEmitter {
             }
         }
     }
-    updateCartInfo(article: number, price: number, action: string, deleteCount?: number) {
-        const totalPriceCart = document.querySelector('.totalPriceCart')
-        const finalPrice = document.querySelector('.priceCart')
-        const discountCart = document.querySelector('.cartDiscount')
-        const countOfItemsCartIcon = document.querySelector('.cartIconCount')
-        const headerSum = document.querySelector('.sumOfItems')
-        const countOfItem = deleteCount ? deleteCount : 1
-        if (totalPriceCart && finalPrice && discountCart) {
-            let sumOfPrices = Number(totalPriceCart.textContent)
-            if (action === 'delete' || action === 'minus') {
-                sumOfPrices -= price
-            }
-            if (action === 'plus') {
-                sumOfPrices += price
-            }
-            const localStorageArrayWithData = localStorage.getItem('cartArticles')
-            if (localStorageArrayWithData && (action === 'plus' || action === 'minus')) {
-                const parsedArrayWithData = JSON.parse(localStorageArrayWithData)
-                for (const obj of parsedArrayWithData) {
-                    if (obj.article === article) {
-                        if (action === 'plus') {
-                            obj.count += 1
-                        }
-                        if (action === 'minus') {
-                            obj.count -= 1
-                        }
-                    }
-                }
-                localStorage.setItem('cartArticles', JSON.stringify(parsedArrayWithData))
-            }
-            localStorage.setItem('sumOfCart', String(sumOfPrices))
-            totalPriceCart.textContent = String(sumOfPrices)
-            if (countOfItemsCartIcon) {
-                if (action === 'delete' || action === 'minus') {
-                    countOfItemsCartIcon.textContent = String(Number(countOfItemsCartIcon.textContent) - countOfItem)
-                }
-                if (action === 'plus') {
-                    countOfItemsCartIcon.textContent = String(Number(countOfItemsCartIcon.textContent) + 1)
-                }
-            }
-            if (headerSum) {
-                headerSum.textContent = String(sumOfPrices)
-            }
-            finalPrice.textContent = String(sumOfPrices - Number(discountCart.textContent))
-        }
-        if (action === 'delete') {
-            const localStorageArray = localStorage.getItem('cartArticles')
-            if (localStorageArray) {
-                const countOfItemsHeader = document.querySelector('.countOfItems')
-                const tempArray = JSON.parse(localStorageArray)
-                for (let i = 0; i < tempArray.length; i++) {
-                    if (article === tempArray[i].article) {
-                        tempArray.splice(i, 1)
-                        break
-                    }
-                }
-                if (countOfItemsHeader) {
-                    countOfItemsHeader.textContent = tempArray.length
-                }
-                localStorage.setItem('cartArticles', JSON.stringify(tempArray))
-            }
-        }
-    }
+
     updateLimitAndPageFields(page: number, limit: number) {
         const pageField = document.querySelector('.cartPageQuery')
         const cartLimitField = document.querySelector('.cartLimitQuery') as HTMLInputElement
@@ -490,6 +427,34 @@ export class CartView extends EventEmitter {
                 }
                 logo.click()
             }, 5000)
+        }
+    }
+    updateCartInformation(sumOfItems: number) {
+        const sumOfItemsBlock = document.querySelector('.totalPriceCart')
+        const allPromocodeBlocks = document.querySelectorAll('.promocodeBlock')
+        const totalDiscountBlock = document.querySelector('.cartDiscount')
+        const finalNumber = document.querySelector('.priceCart')
+        let totalDiscountNumber = 0
+        if (sumOfItemsBlock) {
+            sumOfItemsBlock.textContent = String(sumOfItems)
+            if (allPromocodeBlocks) {
+                for (const promocodeItem of allPromocodeBlocks) {
+                    const item = promocodeItem as HTMLElement
+                    const discountPercent = item.dataset.discount
+                    const discount = (sumOfItems * Number(discountPercent)) / 100
+                    const itemDiscountText = item.querySelector('.cartDiscount')
+                    if (itemDiscountText) {
+                        itemDiscountText.textContent = String(discount)
+                        totalDiscountNumber += discount
+                    }
+                }
+                if (totalDiscountBlock) {
+                    totalDiscountBlock.textContent = String(totalDiscountNumber)
+                }
+            }
+            if (finalNumber) {
+                finalNumber.textContent = String(sumOfItems - totalDiscountNumber)
+            }
         }
     }
 
