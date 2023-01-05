@@ -17,8 +17,10 @@ export class CatalogController {
             navigator.clipboard.writeText(router.getURL())
         })
         this.view.on('ADD_ITEM_TO_CART', (article) => {
-            const item = this.model.items.find((el) => el.article === article)
-            if (item) this.model.addToCart({ article: item.article, price: item.price })
+            this.model.addToCart(+article)
+        })
+        this.view.on('REMOVE_ITEM_FROM_CART', (article) => {
+            this.model.deleteFromCart(+article)
         })
     }
 }

@@ -6,7 +6,13 @@ import cardTemplate from '@/templates/itemMain.hbs'
 import queryString from 'query-string'
 import { Filters } from '@/utils/filters'
 
-type CatalogViewEventsName = 'ADD_ITEM_TO_CART' | 'GO_TO_ITEM' | 'CHANGE_FILTER' | 'RESET_FILTER' | 'COPY_FILTER'
+type CatalogViewEventsName =
+    | 'ADD_ITEM_TO_CART'
+    | 'GO_TO_ITEM'
+    | 'CHANGE_FILTER'
+    | 'RESET_FILTER'
+    | 'COPY_FILTER'
+    | 'REMOVE_ITEM_FROM_CART'
 
 export type CatalogViewInstance = InstanceType<typeof CatalogView>
 
@@ -191,10 +197,24 @@ export class CatalogView extends EventEmitter {
     private createCard(idx: number) {
         const card = document.createElement('div')
         const item = this.filteredItems[idx]
-        card.innerHTML = cardTemplate({ ...item, big: !((idx + 1) % 7) })
+        card.innerHTML = cardTemplate({
+            ...item,
+            big: !((idx + 1) % 7),
+            added: this.model.checkItemInCart(item.article),
+        })
         const addTCartBtn = card.querySelector('.toCartBtn')
         addTCartBtn?.addEventListener('click', () => {
-            this.emit('ADD_ITEM_TO_CART', item.article)
+            if (this.model.checkItemInCart(item.article)) {
+                addTCartBtn.classList.add('invisible')
+                addTCartBtn.lastElementChild?.classList.add('hidden')
+                addTCartBtn.firstElementChild?.classList.remove('hidden')
+                this.emit('REMOVE_ITEM_FROM_CART', item.article)
+            } else {
+                addTCartBtn.classList.remove('invisible')
+                addTCartBtn.lastElementChild?.classList.remove('hidden')
+                addTCartBtn.firstElementChild?.classList.add('hidden')
+                this.emit('ADD_ITEM_TO_CART', item.article)
+            }
         })
         return card.childNodes
     }
