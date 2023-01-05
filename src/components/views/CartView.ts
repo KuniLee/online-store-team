@@ -214,6 +214,13 @@ export class CartView extends EventEmitter {
                     if (value.length === 2) {
                         field.value += '/'
                     }
+                    if (value.length === 3) {
+                        if (!value.includes('/')) {
+                            const tempArray = value.split('')
+                            tempArray.splice(2, 0, '/')
+                            field.value = tempArray.join('')
+                        }
+                    }
                     if (value.length > 5) {
                         field.value = value.slice(0, 5)
                     }
