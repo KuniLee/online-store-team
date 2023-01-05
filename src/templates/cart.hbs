@@ -75,16 +75,12 @@
 
         <label class="modalNameLabel" for="name">Firstname and lastname: </label>
         <input class="modalNameInput text-center border-2 rounded-xl" type="text" placeholder="Length of words > 3" name="name" id="name" pattern='[A-z]{3,}[ ][A-z]{3,}' autocomplete="off" required>
-        <p class="modalNameError">2 words with length > 3</p>
         <label class="modalPhoneLabel" for="number">Phone number: </label>
         <input class="modalPhoneInput text-center border-2 rounded-xl" type="tel" placeholder="+XXXXXXXXX" name="number" id="number" pattern="[+][0-9]{9,12}" autocomplete="off" required>
-        <p class="modalPhoneError">Phone number error</p>
         <label class="modalAddressLabel" for="address">Delivery address: </label>
         <input class="modalAddressInput text-center border-2 rounded-xl" type="text" placeholder="Delivery address" name="address" id="address" autocomplete="off" required>
-        <p class="modalAddressError">Address error</p>
         <label class="modalEmailLabel" for="email">Email: </label>
         <input class="modalEmailInput text-center border-2 rounded-xl" type="email" name="email" id="email" placeholder="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" autocomplete="off" required>
-        <p class="modalEmailError">Email error</p>
         <h2 class="modalCardHead">Credit card details</h2>
         <div class="cardInformation">
           <div class="flex justify-center mb-[10px]">
@@ -97,12 +93,10 @@
             <label for="validNumber">Valid: </label>
             <div>
               <input class='cardData text-center border-2 rounded-xl' placeholder="XX/XX" type="text" name="validNumber" id="validNumber" required>
-              <p class="cardDataError">Card Data error</p>
             </div>
             <label for="CVV">Valid: </label>
             <div>
               <input class='modalCvvInput text-center border-2 rounded-xl' type="number" placeholder="CVV" name="CVV" id="CVV" required>
-              <p class="cardDataError">Card CVV error</p>
             </div>
           </div>
         </div>

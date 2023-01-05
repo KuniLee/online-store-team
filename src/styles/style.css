@@ -101,13 +101,9 @@
         grid-template-areas:
                             'modalHead modalHead'
                             'labelName inputName'
-                            'empty-1 errorName'
                             'labelPhone inputPhone'
-                            'empty-2 errorPhone'
                             'labelAddress inputAddress'
-                            'empty-3 errorAddress'
                             'labelEmail inputEmail'
-                            'empty-4 errorEmail'
                             'cardHead cardHead'
                             'cardInfo cardInfo'
                             'submitButton submitButton';
@@ -122,20 +118,12 @@
         grid-area: labelName;
     }
 
-    .modalNameError {
-        grid-area: errorName;
-    }
-
     .modalPhoneInput {
         grid-area: inputPhone;
     }
 
     .modalPhoneLabel {
         grid-area: labelPhone;
-    }
-
-    .modalPhoneError {
-        grid-area: errorPhone;
     }
 
     .modalAddressInput {
@@ -146,20 +134,12 @@
         grid-area: labelAddress;
     }
 
-    .modalAddressError {
-        grid-area: errorAddress;
-    }
-
     .modalEmailInput {
         grid-area: inputEmail;
     }
 
     .modalEmailLabel {
         grid-area: labelEmail;
-    }
-
-    .modalEmailError {
-        grid-area: errorEmail;
     }
 
     .modalHead {
