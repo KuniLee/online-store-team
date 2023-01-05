@@ -84,6 +84,11 @@ export class CartView extends EventEmitter {
             const cartItems = document.querySelectorAll('.cartItem')
             this.updateCart()
             cartItems?.forEach((el) => {
+                const count = el.querySelector('.countNumber')
+                const price = el.querySelector('.cartItemPrice')
+                if (count && price) {
+                    price.textContent = String(Number(price.textContent) * Number(count.textContent))
+                }
                 el.addEventListener('click', (e) => {
                     const target = e.target as HTMLElement
                     if (target.closest('.cartDeleteBtn')) {
