@@ -20,7 +20,13 @@ export class CartController {
                         (item: { article: string; count: number }) => item.article
                     )
                     const items = await this.model.getItemsByArticles(arrayWithArticles)
-                    this.view.build(items)
+                    const search = new URLSearchParams(window.location.search)
+                    console.log(search.get('quickBuy'))
+                    if (search.get('quickBuy')) {
+                        this.view.build(items, true)
+                    } else {
+                        this.view.build(items)
+                    }
                 } else {
                     this.view.build()
                 }

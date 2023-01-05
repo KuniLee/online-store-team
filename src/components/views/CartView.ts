@@ -36,7 +36,7 @@ export class CartView extends EventEmitter {
         this.container = container
     }
 
-    build(items?: Parse.Attributes[]) {
+    build(items?: Parse.Attributes[], isQuickBuy?: boolean) {
         if (items?.length === 0 || items === undefined) {
             this.container.innerHTML = emptyCartTemplate
         } else {
@@ -77,6 +77,9 @@ export class CartView extends EventEmitter {
                 totalPrice: totalPrice,
                 bankSystemsSprite: require('@/assets/images/bank-sprite.png'),
             })
+            if (isQuickBuy) {
+                this.modalWindowOpen()
+            }
             const cartItems = document.querySelectorAll('.cartItem')
             this.updateCart()
             cartItems?.forEach((el) => {
@@ -364,7 +367,6 @@ export class CartView extends EventEmitter {
         }
     }
     updateCartInfo(article: number, price: number, action: string, deleteCount?: number) {
-        console.log(article, price, action, deleteCount)
         const totalPriceCart = document.querySelector('.totalPriceCart')
         const finalPrice = document.querySelector('.priceCart')
         const discountCart = document.querySelector('.cartDiscount')
