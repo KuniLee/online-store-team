@@ -39,7 +39,6 @@ export class AppModel extends EventEmitter {
         if (!this.catalogItems.length) {
             try {
                 this.catalogItems = await getItems()
-                console.log(1)
             } catch (e) {
                 console.log('error', e)
             }

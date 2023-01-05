@@ -2,11 +2,18 @@ import EventEmitter from 'events'
 import type { AppModelInstance } from '../models/model'
 import catalogTemplate from '@/templates/catalog.html'
 import { FiltersSetting, Item } from 'types/interfaces'
-import cardTemplate from '@/templates/itemMain.hbs'
+import cardTemplate from '@/templates/itemCard.hbs'
+import cardTemplateList from '@/templates/itemList.hbs'
 import queryString from 'query-string'
 import { Filters } from '@/utils/filters'
 
-type CatalogViewEventsName = 'ITEM_BUTTON_CLICK' | 'GO_TO_ITEM' | 'CHANGE_FILTER' | 'RESET_FILTER' | 'COPY_FILTER'
+type CatalogViewEventsName =
+    | 'ADD_ITEM_TO_CART'
+    | 'GO_TO_ITEM'
+    | 'CHANGE_FILTER'
+    | 'RESET_FILTER'
+    | 'COPY_FILTER'
+    | 'REMOVE_ITEM_FROM_CART'
 
 export type CatalogViewInstance = InstanceType<typeof CatalogView>
 
@@ -23,6 +30,7 @@ export class CatalogView extends EventEmitter {
         total: 0,
         search: null,
         sort: '',
+        view: '',
     }
     private filteredItems: Array<Item> = []
     private shownCards = 0
@@ -139,16 +147,21 @@ export class CatalogView extends EventEmitter {
         })
     }
 
-    emit(event: CatalogViewEventsName, arg?: string) {
+    emit(event: CatalogViewEventsName, arg?: string | number) {
         return super.emit(event, arg)
     }
 
-    on(event: CatalogViewEventsName, callback: (arg: string) => void) {
+    on(event: CatalogViewEventsName, callback: (arg: string | number) => void) {
         return super.on(event, callback)
     }
 
     private rebuildCards() {
-        const cardContainer = this.container.querySelector('#items')
+        const cardContainer = this.container.querySelector('#items') as HTMLElement
+        if (this.settings.view === 'list') cardContainer.className = 'container mx-auto flex flex-col gap-3'
+        else
+            cardContainer.className =
+                'container mx-auto grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5'
+
         if (cardContainer) cardContainer.innerHTML = ''
 
         let max
@@ -163,9 +176,7 @@ export class CatalogView extends EventEmitter {
         }
 
         for (let i = 0; i < max; i++) {
-            const card = document.createElement('div')
-            card.innerHTML = cardTemplate({ ...this.filteredItems[i], big: !((i + 1) % 7) })
-            cardContainer?.append(...card.childNodes)
+            cardContainer?.append(...this.createCard(i))
         }
         if (!this.filteredItems.length) {
             cardContainer?.insertAdjacentHTML(
@@ -184,12 +195,41 @@ export class CatalogView extends EventEmitter {
             const last =
                 this.filteredItems.length >= this.shownCards + 10 ? this.shownCards + 10 : this.filteredItems.length
             for (let i = first; i < last; i++) {
-                const card = document.createElement('div')
-                card.innerHTML = cardTemplate({ ...this.filteredItems[i], big: !((i + 1) % 7) })
-                cardContainer?.append(...card.childNodes)
+                cardContainer?.append(...this.createCard(i))
                 this.shownCards++
             }
         }
+    }
+
+    private createCard(idx: number) {
+        const card = document.createElement('div')
+        const item = this.filteredItems[idx]
+        if (this.settings.view === 'list') {
+            card.innerHTML = cardTemplateList({
+                ...item,
+                added: this.model.checkItemInCart(item.article),
+            })
+        } else
+            card.innerHTML = cardTemplate({
+                ...item,
+                big: !((idx + 1) % 7),
+                added: this.model.checkItemInCart(item.article),
+            })
+        const addTCartBtn = card.querySelector('.toCartBtn')
+        addTCartBtn?.addEventListener('click', () => {
+            if (this.model.checkItemInCart(item.article)) {
+                if (this.settings.view === 'cols') addTCartBtn.classList.add('invisible')
+                addTCartBtn.lastElementChild?.classList.add('hidden')
+                addTCartBtn.firstElementChild?.classList.remove('hidden')
+                this.emit('REMOVE_ITEM_FROM_CART', item.article)
+            } else {
+                if (this.settings.view === 'cols') addTCartBtn.classList.remove('invisible')
+                addTCartBtn.lastElementChild?.classList.remove('hidden')
+                addTCartBtn.firstElementChild?.classList.add('hidden')
+                this.emit('ADD_ITEM_TO_CART', item.article)
+            }
+        })
+        return card.childNodes
     }
 
     private setFilters(search: string) {
@@ -202,6 +242,7 @@ export class CatalogView extends EventEmitter {
             total: 0,
             search: null,
             sort: '',
+            view: 'cols',
         }
         this.model.items.forEach(({ category, brand, price, stock }) => {
             // calculate categories total
@@ -235,6 +276,9 @@ export class CatalogView extends EventEmitter {
         if (parsedSearch.search && typeof parsedSearch.search === 'string') {
             this.settings.search = parsedSearch.search
         }
+        if (parsedSearch.view && typeof parsedSearch.view === 'string') {
+            if (['list'].includes(parsedSearch.view)) this.settings.view = parsedSearch.view
+        }
     }
 
     buildQueryString() {
@@ -245,6 +289,7 @@ export class CatalogView extends EventEmitter {
             stock?: Array<string>
             sort?: string
             search?: string
+            view?: string
         } = {}
         for (const brandKey in this.settings.brand) {
             if (this.settings.brand[brandKey].check) {
@@ -269,6 +314,8 @@ export class CatalogView extends EventEmitter {
         if (this.settings.sort !== '') query.sort = this.settings.sort
 
         if (this.settings.search) query.search = this.settings.search
+
+        if (this.settings.view !== 'cols') query.view = this.settings.view
 
         this.emit(
             'CHANGE_FILTER',
