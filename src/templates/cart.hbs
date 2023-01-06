@@ -75,36 +75,32 @@
   </div>
 </div>
 <section class="modalBlock w-screen h-screen bg-black/60 flex justify-center items-center absolute top-0 left-[-200%] transition-all">
-  <div class="w-1/2 border-2 border- class=modalPhoneLabelblack rounded-2xl bg-white flex justify-center">
+  <div class="w-1/2 border-2 border-black rounded-2xl bg-white flex justify-center max-[1200px]:w-[90%]">
     <form class="modalForm">
       <div class="modalGrid w-[100%] font-HelveticaNeueCyr justify-between text-center">
-        <h2 class="modalHead mt-[10px]">Personal details</h2>
+        <h2 class="modalHead mt-[10px] text-[24px] font-bold">Personal details</h2>
 
         <label class="modalNameLabel" for="name">Firstname and lastname: </label>
-        <input class="modalNameInput text-center border-2 rounded-xl" type="text" placeholder="Length of words > 3" name="name" id="name" pattern='[A-z]{3,}[ ][A-z]{3,}' autocomplete="off" required>
+        <input class="modalNameInput text-center border-2 rounded-xl max-[480px]:w-[95%]" type="text" placeholder="Length of words > 3" name="name" id="name" pattern='[A-z]{3,}[ ][A-z]{3,}' autocomplete="off" required>
         <label class="modalPhoneLabel" for="number">Phone number: </label>
-        <input class="modalPhoneInput text-center border-2 rounded-xl" type="tel" placeholder="+XXXXXXXXX" name="number" id="number" pattern="[+][0-9]{9,12}" autocomplete="off" required>
+        <input class="modalPhoneInput text-center border-2 rounded-xl max-[480px]:w-[95%]" type="tel" placeholder="+XXXXXXXXX" name="number" id="number" pattern="[+][0-9]{9,12}" autocomplete="off" required>
         <label class="modalAddressLabel" for="address">Delivery address: </label>
-        <input class="modalAddressInput text-center border-2 rounded-xl" type="text" placeholder="Delivery address" name="address" id="address" autocomplete="off" required>
+        <input class="modalAddressInput text-center border-2 rounded-xl max-[480px]:w-[95%]" type="text" placeholder="Delivery address" name="address" id="address" autocomplete="off" required>
         <label class="modalEmailLabel" for="email">Email: </label>
-        <input class="modalEmailInput text-center border-2 rounded-xl" type="email" name="email" id="email" placeholder="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" autocomplete="off" required>
+        <input class="modalEmailInput text-center border-2 rounded-xl max-[480px]:w-[95%]" type="email" name="email" id="email" placeholder="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" autocomplete="off" required>
         <h2 class="modalCardHead">Credit card details</h2>
         <div class="cardInformation">
-          <div class="flex justify-center mb-[10px]">
+          <div class="flex justify-center mb-[10px] max-[560px]:flex-wrap">
             <div class="systemsSprite h-[28px] w-[44px] border-2 border-black mr-[5px]">
             </div>
             <label for="cardNumber">Card number: </label>
-            <input class="cardNumber text-center border-2 rounded-xl w-[300px]" placeholder="XXXXXXXXXXXXXXXX" type="number" name="cardNumber" id="cardNumber" required>
+            <input class="cardNumber text-center border-2 rounded-xl w-[300px] max-[560px]:w-full max-[560px]:mt-[10px] max-[480px]:w-[95%]" placeholder="XXXXXXXXXXXXXXXX" type="number" name="cardNumber" id="cardNumber" required>
           </div>
-          <div class="flex justify-center">
+          <div class="flex justify-center max-[560px]:flex-wrap">
             <label for="validNumber">Valid: </label>
-            <div>
-              <input class='cardData text-center border-2 rounded-xl' placeholder="XX/XX" type="text" name="validNumber" id="validNumber" required>
-            </div>
-            <label for="CVV">Valid: </label>
-            <div>
-              <input class='modalCvvInput text-center border-2 rounded-xl' type="number" placeholder="CVV" name="CVV" id="CVV" required>
-            </div>
+            <input class='cardData text-center border-2 rounded-xl max-[560px]:w-full max-[480px]:w-[95%]' placeholder="XX/XX" type="text" name="validNumber" id="validNumber" required>
+            <label for="CVV">CVV: </label>
+            <input class='modalCvvInput text-center border-2 rounded-xl max-[560px]:w-full max-[480px]:w-[95%]' type="number" placeholder="CVV" name="CVV" id="CVV" required>
           </div>
         </div>
         <button class="modalSubmitButton border-2 border-black rounded-xl w-[100px] justify-self-center mb-[10px]" type="submit">Submit</button>

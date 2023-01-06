@@ -94,6 +94,10 @@
         left: 0 !important;
     }
 
+    .modalForm {
+        max-width: 100%;
+    }
+
     .modalGrid {
         display: grid;
         max-width: 612px;
@@ -108,6 +112,26 @@
                             'cardInfo cardInfo'
                             'submitButton submitButton';
         grid-template-columns: 200px 400px;
+    }
+
+    @media screen and (max-width: 720px) {
+        .modalGrid {
+            grid-template-areas:
+                'modalHead modalHead'
+                'labelName labelName'
+                'inputName inputName'
+                'labelPhone labelPhone'
+                'inputPhone inputPhone'
+                'labelAddress labelAddress'
+                'inputAddress inputAddress'
+                'labelEmail labelEmail'
+                'inputEmail inputEmail'
+                'cardHead cardHead'
+                'cardInfo cardInfo'
+                'submitButton submitButton';
+            align-items: center;
+            grid-template-columns: 1fr 1fr;
+        }
     }
 
     .modalNameInput {
