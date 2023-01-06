@@ -1,6 +1,6 @@
 <div class="container mx-auto">
-<section class="flex justify-between font-HelveticaNeueCyr font-[550] text-[32px] leading-snug">
-    <h2 class="">Cart <span class="font-HelveticaNeueCyr text-[16px] text-gray-300"><span class="countOfItems">{{countOfItems}}</span> items</span></h2>
+<section class="flex justify-between font-HelveticaNeueCyr font-[550] text-[32px] leading-snug mb-[10px]">
+    <h2>Cart</h2>
     <div class="text-[16px]">
       <div class="mb-[10px]">
         <label>
@@ -16,27 +16,29 @@
       </div>
     </div>
   </section>
-  <div class="flex justify-between">
-    <div class="CartContainerWithItem w-[70%]">
+  <div class="flex justify-between max-[900px]:flex-wrap">
+    <div class="CartContainerWithItem w-[70%] max-[900px]:w-[100%]">
       {{#each arrayOfArticles}}
-        <div class="cartItem w-[95%] border-transparent mb-4 font-HelveticaNeueCyr" data-article="{{this.article}}" data-price="{{this.price}}">
-          <div class="flex items-center justify-between p-[20px]">
-            <img class="object-contain max-h-[100px]" src="{{this.images.[0]}}" alt="">
-            <div>
-              <h3 class="jont-HelveticaNeueCyr font-[550] text-[16px] leading-snug w-[250px] text-center">{{this.title}}</h3>
-            </div>
-            <div class="countContainer flex flex-col items-center">
-              <div>
-                <p>In stock: <span class="inStockCount">{{this.stock}}</span></p>
+        <div class="cartItem w-[95%] border-transparent mb-4 font-HelveticaNeueCyr max-[900px]:w-full" data-article="{{this.article}}" data-price="{{this.price}}">
+          <div class="flex items-center justify-between p-[20px] max-[900px]:p-0">
+            <img class="object-contain max-h-[100px]" src="{{this.images.[0]}}&fit=constrain" alt="">
+            <div class="flex w-[80%] justify-between max-[1023px]:flex-wrap max-[1023px]:justify-around">
+              <div class="w-[250px] max-[1023px]:w-full max-[1023px]:mb-[10px]">
+                <h3 class="jont-HelveticaNeueCyr font-[550] text-[16px] leading-snug text-center max-[768px]:text-[14px]">{{this.title}}</h3>
               </div>
-              <div class="flex items-center">
-                <button type="button" class="mr-[5px]" data-action="minus">-</button>
-                <p class="countNumber w-[50px] inline-block text-center">{{this.count}}</p>
-                <button type="button" data-action="plus">+</button>
+              <div class="countContainer flex flex-col items-center w-[100px] max-[1023px]:flex-wrap max-[1023px]:w-unset">
+                <div>
+                  <p>In stock: <span class="inStockCount">{{this.stock}}</span></p>
+                </div>
+                <div class="flex items-center">
+                  <button type="button" class="mr-[5px] p-[5px]" data-action="minus">-</button>
+                  <p class="countNumber w-[50px] inline-block text-center">{{this.count}}</p>
+                  <button type="button" class="p-[5px]" data-action="plus">+</button>
+                </div>
               </div>
-            </div>
-            <div>
-              <p><span class="cartItemPrice">{{this.price}}</span>₽</p>
+              <div class="w-[70px] text-center">
+                <p><span class="cartItemPrice">{{this.price}}</span>₽</p>
+              </div>
             </div>
             <button class="cartDeleteBtn self-start cursor-pointer" data-button="delete">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -47,10 +49,10 @@
         </div>
       {{/each}}
     </div>
-    <div class="w-[25%] font-HelveticaNeueCyr">
-      <h3 class="text-[32px] mb-[10px]">About order</h3>
+    <div class="w-[25%] font-HelveticaNeueCyr max-[900px]:w-[100%]">
+      <h3 class="text-[32px] mb-[10px] max-[900px]:text-center">About order</h3>
       <div class="flex justify-between mb-[10px]">
-        <input type="text" name="promocode" placeholder="Enter promocode" class="promocodeInput text-center border-2 rounded-xl border-black">
+        <input type="text" name="promocode" placeholder="Enter promocode" class="promocodeInput text-center border-2 rounded-xl border-black w-[70%]">
         <button type="button" class="enterPromocode px-[10px] py-[5px] border-2 border-black outline-none">Apply</button>
       </div>
       <div class="text-center text-[12px]">
