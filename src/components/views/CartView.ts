@@ -97,7 +97,7 @@ export class CartView extends EventEmitter {
                     if (target.closest('.countContainer')) {
                         const countField = target.closest('.countContainer')?.querySelector('.countNumber')
                         const cartElement = target.closest('.cartItem') as HTMLElement
-                        const article = cartElement.dataset.article
+                        const stock = el.querySelector('.inStockCount')?.textContent
                         const price = cartElement.dataset.price
                         const cartPrice = cartElement.querySelector('.cartItemPrice')
                         if (target.dataset.action === 'minus') {
@@ -117,6 +117,11 @@ export class CartView extends EventEmitter {
                         if (target.dataset.action === 'plus') {
                             if (countField) {
                                 const countResult = Number(countField.textContent) + 1
+                                if (stock) {
+                                    if (countResult > Number(stock)) {
+                                        return
+                                    }
+                                }
                                 countField.textContent = String(countResult)
                                 if (cartPrice && price) {
                                     cartPrice.textContent = String(Number(price) * countResult)

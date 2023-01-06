@@ -25,10 +25,15 @@
             <div>
               <h3 class="jont-HelveticaNeueCyr font-[550] text-[16px] leading-snug w-[250px] text-center">{{this.title}}</h3>
             </div>
-            <div class="countContainer flex items-center">
-              <button type="button" class="mr-[5px]" data-action="minus">-</button>
-              <p class="countNumber w-[50px] inline-block text-center">{{this.count}}</p>
-              <button type="button" data-action="plus">+</button>
+            <div class="countContainer flex flex-col items-center">
+              <div>
+                <p>In stock: <span class="inStockCount">{{this.stock}}</span></p>
+              </div>
+              <div class="flex items-center">
+                <button type="button" class="mr-[5px]" data-action="minus">-</button>
+                <p class="countNumber w-[50px] inline-block text-center">{{this.count}}</p>
+                <button type="button" data-action="plus">+</button>
+              </div>
             </div>
             <div>
               <p><span class="cartItemPrice">{{this.price}}</span>₽</p>
