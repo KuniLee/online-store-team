@@ -133,7 +133,7 @@ export class CartView extends EventEmitter {
                 })
             })
             const cartLimitField = document.querySelector('.cartLimitQuery') as HTMLInputElement
-            cartLimitField?.addEventListener('change', () => {
+            cartLimitField?.addEventListener('input', () => {
                 this.emit('CHANGE_PAGE_QUERY_LIMIT')
             })
             document.querySelector('.cartPageMinusBtn')?.addEventListener('click', () => {
