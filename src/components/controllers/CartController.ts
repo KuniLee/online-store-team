@@ -112,7 +112,7 @@ export class CartController {
             this.view.successBuy()
         })
         this.view.on('CART_CHANGE', async (article?: string) => {
-            const totalSum = await this.model.changeCart(article)
+            const totalSum = article ? await this.model.changeCart(article) : await this.model.changeCart()
             this.view.updateCartInformation(Number(totalSum))
         })
         this.view.on('CART_ITEM_CLICK', (article: string) => {
