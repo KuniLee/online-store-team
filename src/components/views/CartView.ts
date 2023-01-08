@@ -397,6 +397,7 @@ export class CartView extends EventEmitter {
         const element = el as HTMLElement
         const article = element.dataset.article
         el.remove()
+        this.updateCart()
         this.emit('CART_CHANGE', article)
         const items = document.querySelectorAll('.cartItem.hidden')
         const cartItems = document.querySelectorAll('.cartItem')
