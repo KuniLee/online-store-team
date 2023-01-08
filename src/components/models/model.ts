@@ -20,7 +20,6 @@ export class AppModel extends EventEmitter {
 
     changePage(page: Paths, args?: { path: string; search: string }) {
         this.currentPage = page
-        console.log(this.currentPage)
         switch (page) {
             case '/':
                 this.getItems().then(() => {
@@ -71,7 +70,6 @@ export class AppModel extends EventEmitter {
             await this.getItems()
         }
         const object = this.catalogItems.find((element: Item) => element.article === article)
-        console.log(this.catalogItems)
         if (object) {
             const localStorageItem = localStorage.getItem('cartArticles')
             const localStorageSum = localStorage.getItem('sumOfCart')
@@ -93,7 +91,6 @@ export class AppModel extends EventEmitter {
                 localStorage.setItem('cartArticles', JSON.stringify(articlesArray))
                 localStorage.setItem('sumOfCart', String(object.price))
             }
-            console.log(article)
             this.updateCartIcon()
             this.emit('ITEM_ADDED')
         }
@@ -203,7 +200,6 @@ export class AppModel extends EventEmitter {
                                 itemsArray[i].count === count ? Number(itemsArray[i].count) : Number(count)
                         }
                     }
-                    console.log(indexToDelete, articleToDelete)
                     if (articleToDelete && indexToDelete !== undefined) {
                         itemsArray.splice(indexToDelete, 1)
                     }

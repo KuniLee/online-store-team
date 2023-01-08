@@ -154,7 +154,6 @@ export class CartView extends EventEmitter {
             document.querySelector('.enterPromocode')?.addEventListener('click', () => {
                 const promocodeField = document.querySelector('.promocodeInput') as HTMLInputElement
                 const promocodeValue = promocodeField?.value
-                console.log(promocodeValue)
                 if (promocodeValue) {
                     this.emit('ENTER_PROMOCODE', promocodeValue)
                 }
@@ -171,7 +170,6 @@ export class CartView extends EventEmitter {
                         let count = 0
                         match.forEach((el) => {
                             const str = el.replace(',', '')
-                            console.log(str)
                             if (str.length < 5) {
                                 count += 1
                             }
