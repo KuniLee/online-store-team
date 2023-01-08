@@ -12,8 +12,6 @@ export class AppController {
         this.view = view
         this.router = router
         router.on('ROUTE', (page: Paths, args) => {
-            console.log('route to ', page, args)
-            // TODO: проверка есть ли такой товар, если на item
             this.model.changePage(page, args)
         })
         view.on('CART_BUTTON_CLICK', () => {

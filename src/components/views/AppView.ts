@@ -83,7 +83,6 @@ export class AppView extends EventEmitter {
     }
 
     cartIconUpdate(cartObj: { count: number; price: number }) {
-        console.log(cartObj)
         const countItemCart = document.querySelector('.cartIconCount')
         const sumOfPriceCart = document.querySelector('.sumOfItems')
         if (countItemCart && sumOfPriceCart) {

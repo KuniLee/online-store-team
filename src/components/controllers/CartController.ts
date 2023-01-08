@@ -21,7 +21,6 @@ export class CartController {
                     )
                     const items = await this.model.getItemsByArticles(arrayWithArticles)
                     const search = new URLSearchParams(window.location.search)
-                    console.log(search.get('quickBuy'))
                     if (search.get('quickBuy')) {
                         this.view.build(items, true)
                     } else {
@@ -112,7 +111,7 @@ export class CartController {
             this.view.successBuy()
         })
         this.view.on('CART_CHANGE', async (article?: string) => {
-            const totalSum = await this.model.changeCart(article)
+            const totalSum = article ? await this.model.changeCart(article) : await this.model.changeCart()
             this.view.updateCartInformation(Number(totalSum))
         })
         this.view.on('CART_ITEM_CLICK', (article: string) => {

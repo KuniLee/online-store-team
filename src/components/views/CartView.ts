@@ -78,6 +78,7 @@ export class CartView extends EventEmitter {
                 totalPrice: totalPrice,
                 bankSystemsSprite: require('@/assets/images/bank-sprite.png'),
             })
+            this.updateItemNumber()
             if (isQuickBuy) {
                 this.modalWindowOpen()
             }
@@ -153,7 +154,6 @@ export class CartView extends EventEmitter {
             document.querySelector('.enterPromocode')?.addEventListener('click', () => {
                 const promocodeField = document.querySelector('.promocodeInput') as HTMLInputElement
                 const promocodeValue = promocodeField?.value
-                console.log(promocodeValue)
                 if (promocodeValue) {
                     this.emit('ENTER_PROMOCODE', promocodeValue)
                 }
@@ -170,7 +170,6 @@ export class CartView extends EventEmitter {
                         let count = 0
                         match.forEach((el) => {
                             const str = el.replace(',', '')
-                            console.log(str)
                             if (str.length < 5) {
                                 count += 1
                             }
@@ -327,15 +326,17 @@ export class CartView extends EventEmitter {
             if (promocodeField.classList.contains('border-black')) {
                 promocodeField.classList.remove('border-black')
             }
-            if (promocodeField.classList.contains('border-red')) {
-                promocodeField.classList.remove('border-red')
+            if (promocodeField.classList.contains('border-red-500')) {
+                promocodeField.classList.remove('border-red-500')
             }
             promocodeField.classList.add('border-green-500')
             const discountField = document.querySelector('.cartDiscount')
-            const totalPriceField = document.querySelector('.totalPriceCart')?.textContent
+            const totalPrice = document.querySelector('.totalPriceCart')
+            const totalPriceField = totalPrice?.textContent
             const summaryField = document.querySelector('.priceCart')
             const totalDiscountFields = document.querySelectorAll('.promocodeBlock')
             const totalDiscountBlock = document.querySelector('.totalDiscount')
+            const aboutOrderInformation = document.querySelector('.cartOrderInformation')
             let totalDisc = 0
             const disc = (Number(totalPriceField) * discount) / 100
             if (totalDiscountFields) {
@@ -360,8 +361,24 @@ export class CartView extends EventEmitter {
             })
             if (discountField && summaryField && totalDiscountBlock && totalPriceField) {
                 totalDiscountBlock.after(blockFragment.content)
+                const discountNew = aboutOrderInformation?.querySelector('.promocodeBlock.new')
+                if (discountNew) {
+                    discountNew.classList.remove('new')
+                    discountNew.addEventListener('click', (e) => {
+                        const target = e.target as HTMLElement
+                        if (target.closest('.discountDeleteButton')) {
+                            discountNew.remove()
+                            this.emit('CART_CHANGE')
+                        }
+                    })
+                }
                 summaryField.textContent = String(Number(totalPriceField) - totalDisc - disc)
                 discountField.textContent = String(totalDisc + disc)
+                if (totalPrice) {
+                    if (!totalPrice.classList.contains('line-through')) {
+                        totalPrice.classList.add('line-through')
+                    }
+                }
             }
         } else {
             if (promocodeField.classList.contains('border-black')) {
@@ -378,6 +395,7 @@ export class CartView extends EventEmitter {
         const element = el as HTMLElement
         const article = element.dataset.article
         el.remove()
+        this.updateCart()
         this.emit('CART_CHANGE', article)
         const items = document.querySelectorAll('.cartItem.hidden')
         const cartItems = document.querySelectorAll('.cartItem')
@@ -388,6 +406,7 @@ export class CartView extends EventEmitter {
                 this.emit('CHANGE_PAGE_QUERY_LIMIT')
             }
         }
+        this.updateItemNumber()
     }
 
     updateLimitAndPageFields(page: number, limit: number) {
@@ -472,6 +491,20 @@ export class CartView extends EventEmitter {
             }
             if (finalNumber) {
                 finalNumber.textContent = String(sumOfItems - totalDiscountNumber)
+                if (totalDiscountNumber === 0) {
+                    if (sumOfItemsBlock.classList.contains('line-through')) {
+                        sumOfItemsBlock.classList.remove('line-through')
+                    }
+                }
+            }
+        }
+    }
+    updateItemNumber() {
+        const items = document.querySelectorAll('.cartItem')
+        if (items) {
+            for (let i = 0; i < items.length; i++) {
+                const itemNumber = items[i].querySelector('.cartItemIndex') as HTMLElement
+                itemNumber.textContent = String(i + 1)
             }
         }
     }
