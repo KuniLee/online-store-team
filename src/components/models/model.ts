@@ -214,6 +214,7 @@ export class AppModel extends EventEmitter {
             localStorage.setItem('sumOfCart', String(0))
         }
         localStorage.setItem('cartArticles', JSON.stringify(itemsArray))
+        localStorage.setItem('sumOfCart', String(totalPrice))
         this.updateCartIcon()
         return totalPrice
     }
