@@ -218,12 +218,10 @@ export class CatalogView extends EventEmitter {
         const addTCartBtn = card.querySelector('.toCartBtn')
         addTCartBtn?.addEventListener('click', () => {
             if (this.model.checkItemInCart(item.article)) {
-                if (this.settings.view === 'cols') addTCartBtn.classList.add('invisible')
                 addTCartBtn.lastElementChild?.classList.add('hidden')
                 addTCartBtn.firstElementChild?.classList.remove('hidden')
                 this.emit('REMOVE_ITEM_FROM_CART', item.article)
             } else {
-                if (this.settings.view === 'cols') addTCartBtn.classList.remove('invisible')
                 addTCartBtn.lastElementChild?.classList.remove('hidden')
                 addTCartBtn.firstElementChild?.classList.add('hidden')
                 this.emit('ADD_ITEM_TO_CART', item.article)
