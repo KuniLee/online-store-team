@@ -115,6 +115,9 @@ export class CartController {
             const totalSum = await this.model.changeCart(article)
             this.view.updateCartInformation(Number(totalSum))
         })
+        this.view.on('CART_ITEM_CLICK', (article: string) => {
+            this.router.push(`item/${article}`)
+        })
     }
 
     updateQuery(limitCount: string, pageCount: string) {

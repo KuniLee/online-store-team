@@ -130,6 +130,14 @@ export class CartView extends EventEmitter {
                             }
                         }
                     }
+                    if (
+                        !target.closest('.countContainer') &&
+                        target.tagName !== 'BUTTON' &&
+                        !target.closest('.cartDeleteBtn')
+                    ) {
+                        const itemArticle = (el as HTMLElement).dataset.article
+                        this.emit('CART_ITEM_CLICK', itemArticle)
+                    }
                 })
             })
             const cartLimitField = document.querySelector('.cartLimitQuery') as HTMLInputElement
