@@ -78,6 +78,7 @@ export class CartView extends EventEmitter {
                 totalPrice: totalPrice,
                 bankSystemsSprite: require('@/assets/images/bank-sprite.png'),
             })
+            this.updateItemNumber()
             if (isQuickBuy) {
                 this.modalWindowOpen()
             }
@@ -388,6 +389,7 @@ export class CartView extends EventEmitter {
                 this.emit('CHANGE_PAGE_QUERY_LIMIT')
             }
         }
+        this.updateItemNumber()
     }
 
     updateLimitAndPageFields(page: number, limit: number) {
@@ -472,6 +474,15 @@ export class CartView extends EventEmitter {
             }
             if (finalNumber) {
                 finalNumber.textContent = String(sumOfItems - totalDiscountNumber)
+            }
+        }
+    }
+    updateItemNumber() {
+        const items = document.querySelectorAll('.cartItem')
+        if (items) {
+            for (let i = 0; i < items.length; i++) {
+                const itemNumber = items[i].querySelector('.cartItemIndex') as HTMLElement
+                itemNumber.textContent = String(i + 1)
             }
         }
     }

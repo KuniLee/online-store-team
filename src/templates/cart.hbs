@@ -21,6 +21,9 @@
       {{#each arrayOfArticles}}
         <div class="cartItem w-[95%] border-transparent mb-4 font-HelveticaNeueCyr max-[900px]:w-full" data-article="{{this.article}}" data-price="{{this.price}}">
           <div class="flex items-center justify-between p-[20px] max-[900px]:p-0">
+            <div>
+              <p class="cartItemIndex">{{@index}}</p>
+            </div>
             <img class="object-contain cursor-pointer max-h-[100px]" src="{{this.images.[0]}}&fit=constrain" alt="">
             <div class="flex w-[80%] justify-between max-[1023px]:flex-wrap max-[1023px]:justify-around">
               <div class="w-[250px] max-[1023px]:w-full max-[1023px]:mb-[10px]">
