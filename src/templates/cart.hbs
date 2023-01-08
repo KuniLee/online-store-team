@@ -10,9 +10,9 @@
       </div>
       <div class="flex">
         <p>Page:&nbsp;</p>
-        <button class="cartPageMinusBtn w-[21px] h-21px border-2 rounded-[5px] border-black mr-[10px]"><</button>
+        <button class="cartPageMinusBtn w-[21px] h-21px border-2 rounded-[5px] border-black mr-[10px] hover:bg-black hover:text-white hover:transition"><</button>
         <p class="mr-[10px] cartPageQuery">{{pageValue}}</p>
-        <button class="cartPagePlusBtn w-[21px] h-21px border-2 rounded-[5px] border-black">></button>
+        <button class="cartPagePlusBtn w-[21px] h-21px border-2 rounded-[5px] border-black hover:bg-black hover:text-white hover:transition">></button>
       </div>
     </div>
   </section>
@@ -34,17 +34,17 @@
                   <p>In stock: <span class="inStockCount">{{this.stock}}</span></p>
                 </div>
                 <div class="flex items-center">
-                  <button type="button" class="mr-[5px] p-[5px]" data-action="minus">-</button>
+                  <button type="button" class="mr-[5px] p-[5px] hover:scale-[1.75] hover:transition" data-action="minus">-</button>
                   <p class="countNumber w-[50px] inline-block text-center">{{this.count}}</p>
-                  <button type="button" class="p-[5px]" data-action="plus">+</button>
+                  <button type="button" class="p-[5px] hover:scale-[1.75] hover:transition" data-action="plus">+</button>
                 </div>
               </div>
               <div class="w-[70px] text-center">
                 <p><span class="cartItemPrice">{{this.price}}</span>₽</p>
               </div>
             </div>
-            <button class="cartDeleteBtn self-start cursor-pointer" data-button="delete">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <button class="cartDeleteBtn self-start cursor-pointer group" data-button="delete">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 group-hover:rotate-90 group-hover:transition">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -56,7 +56,7 @@
       <h3 class="text-[32px] mb-[10px] max-[900px]:text-center">About order</h3>
       <div class="flex justify-between mb-[10px]">
         <input type="text" name="promocode" placeholder="Enter promocode" class="promocodeInput text-center border-2 rounded-xl border-black w-[70%]">
-        <button type="button" class="enterPromocode px-[10px] py-[5px] border-2 border-black outline-none">Apply</button>
+        <button type="button" class="enterPromocode px-[10px] py-[5px] border-2 border-black outline-none hover:bg-black hover:text-white hover:transition">Apply</button>
       </div>
       <div class="text-center text-[12px]">
         <p>Try: RS, NEW10, REF15</p>
@@ -73,7 +73,7 @@
         <p>Summary</p>
         <p class="text-[32px]"><span class="priceCart">{{totalPrice}}</span>₽</p>
       </div>
-      <button class="buyButton text-center w-full text-[24px] border-2 border-black">Buy now</button>
+      <button class="buyButton text-center w-full text-[24px] border-2 border-black hover:bg-black hover:text-white hover:transition">Buy now</button>
     </div>
   </div>
 </div>
@@ -82,7 +82,6 @@
     <form class="modalForm">
       <div class="modalGrid w-[100%] font-HelveticaNeueCyr justify-between text-center">
         <h2 class="modalHead mt-[10px] text-[24px] font-bold">Personal details</h2>
-
         <label class="modalNameLabel" for="name">Firstname and lastname: </label>
         <input class="modalNameInput text-center border-2 rounded-xl max-[480px]:w-[95%]" type="text" placeholder="Length of words > 3" name="name" id="name" pattern='[A-z]{3,}[ ][A-z]{3,}' autocomplete="off" required>
         <label class="modalPhoneLabel" for="number">Phone number: </label>
@@ -106,7 +105,7 @@
             <input class='modalCvvInput text-center border-2 rounded-xl max-[560px]:w-full max-[480px]:w-[95%]' type="number" placeholder="CVV" name="CVV" id="CVV" required>
           </div>
         </div>
-        <button class="modalSubmitButton border-2 border-black rounded-xl w-[100px] justify-self-center mb-[10px]" type="submit">Submit</button>
+        <button class="modalSubmitButton border-2 border-black rounded-xl w-[100px] justify-self-center mb-[10px] hover:bg-black hover:text-white hover:transition" type="submit">Submit</button>
       </div>
     </form>
   </div>
