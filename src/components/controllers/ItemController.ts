@@ -19,18 +19,25 @@ export class ItemController {
                 else this.view.build(item)
             }
         })
-        this.view.on('ADD_TO_CART_CLICK', (article: number) => {
+        this.view.on('ADD_TO_CART_CLICK', (article: number, isQuickBuy: boolean) => {
             const resultOfCheckItem = this.model.checkItemInCart(article)
-            console.log(resultOfCheckItem)
-            if (resultOfCheckItem) {
-                this.model.deleteFromCart(article)
-            } else {
+            if (!isQuickBuy) {
+                if (resultOfCheckItem) {
+                    this.model.deleteFromCart(article)
+                } else {
+                    this.model.addToCart(article)
+                }
+            }
+            if (isQuickBuy && !resultOfCheckItem) {
                 this.model.addToCart(article)
             }
         })
         this.view.on('CHECK_ITEM_IN_CART', (article: number) => {
             const resultOfCheckItem = this.model.checkItemInCart(article)
             this.view.changeButtonAddToCart(resultOfCheckItem)
+        })
+        this.view.on('QUICK_BUY', (article: number) => {
+            this.router.push('/cart?quickBuy=true')
         })
     }
 }

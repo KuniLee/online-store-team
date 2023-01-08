@@ -94,6 +94,10 @@
         left: 0 !important;
     }
 
+    .modalForm {
+        max-width: 100%;
+    }
+
     .modalGrid {
         display: grid;
         max-width: 612px;
@@ -101,17 +105,33 @@
         grid-template-areas:
                             'modalHead modalHead'
                             'labelName inputName'
-                            'empty-1 errorName'
                             'labelPhone inputPhone'
-                            'empty-2 errorPhone'
                             'labelAddress inputAddress'
-                            'empty-3 errorAddress'
                             'labelEmail inputEmail'
-                            'empty-4 errorEmail'
                             'cardHead cardHead'
                             'cardInfo cardInfo'
                             'submitButton submitButton';
         grid-template-columns: 200px 400px;
+    }
+
+    @media screen and (max-width: 720px) {
+        .modalGrid {
+            grid-template-areas:
+                'modalHead modalHead'
+                'labelName labelName'
+                'inputName inputName'
+                'labelPhone labelPhone'
+                'inputPhone inputPhone'
+                'labelAddress labelAddress'
+                'inputAddress inputAddress'
+                'labelEmail labelEmail'
+                'inputEmail inputEmail'
+                'cardHead cardHead'
+                'cardInfo cardInfo'
+                'submitButton submitButton';
+            align-items: center;
+            grid-template-columns: 1fr 1fr;
+        }
     }
 
     .modalNameInput {
@@ -122,20 +142,12 @@
         grid-area: labelName;
     }
 
-    .modalNameError {
-        grid-area: errorName;
-    }
-
     .modalPhoneInput {
         grid-area: inputPhone;
     }
 
     .modalPhoneLabel {
         grid-area: labelPhone;
-    }
-
-    .modalPhoneError {
-        grid-area: errorPhone;
     }
 
     .modalAddressInput {
@@ -146,20 +158,12 @@
         grid-area: labelAddress;
     }
 
-    .modalAddressError {
-        grid-area: errorAddress;
-    }
-
     .modalEmailInput {
         grid-area: inputEmail;
     }
 
     .modalEmailLabel {
         grid-area: labelEmail;
-    }
-
-    .modalEmailError {
-        grid-area: errorEmail;
     }
 
     .modalHead {

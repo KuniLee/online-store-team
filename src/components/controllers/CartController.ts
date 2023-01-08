@@ -20,7 +20,13 @@ export class CartController {
                         (item: { article: string; count: number }) => item.article
                     )
                     const items = await this.model.getItemsByArticles(arrayWithArticles)
-                    this.view.build(items)
+                    const search = new URLSearchParams(window.location.search)
+                    console.log(search.get('quickBuy'))
+                    if (search.get('quickBuy')) {
+                        this.view.build(items, true)
+                    } else {
+                        this.view.build(items)
+                    }
                 } else {
                     this.view.build()
                 }
@@ -56,14 +62,9 @@ export class CartController {
             if (pageField) {
                 const maxItems = (Number(pageField.textContent) + 1) * Number(limitValue)
                 if (maxItems < itemsCount + Number(limitValue)) {
-                    pageField.textContent = String(Number(pageField.textContent) + 1)
-                    const str = {
-                        limit: limitValue,
-                        page: pageField.textContent,
-                    }
-                    const sp = new URLSearchParams(str)
-                    this.router.setQueries(String(sp))
-                    this.view.updateCart()
+                    const pageCount = String(Number(pageField.textContent) + 1)
+                    this.updateQuery(limitValue, pageCount)
+                    this.view.updateLimitAndPageFields(Number(pageCount), Number(limitValue))
                 }
             }
         })
@@ -73,16 +74,11 @@ export class CartController {
                 if (pageField.textContent === '1') {
                     return
                 } else {
-                    pageField.textContent = String(Number(pageField.textContent) - 1)
+                    const pageCount = String(Number(pageField.textContent) - 1)
                     const limitField = document.querySelector('.cartLimitQuery') as HTMLInputElement
                     const limitValue = limitField?.value
-                    const str = {
-                        limit: limitValue,
-                        page: pageField.textContent,
-                    }
-                    const sp = new URLSearchParams(str)
-                    this.router.setQueries(String(sp))
-                    this.view.updateCart()
+                    this.updateQuery(limitValue, pageCount)
+                    this.view.updateLimitAndPageFields(Number(pageCount), Number(limitValue))
                 }
             }
         })
@@ -92,25 +88,21 @@ export class CartController {
             const cartItems = document.querySelectorAll('.cartItem')
             const newLimit = cartLimitField.value
             const maxPage = Math.ceil(cartItems.length / Number(newLimit))
+            let pageCount = Number(pageField?.textContent)
             if (maxPage === 0) {
                 this.view.build()
             }
-            if (maxPage < Number(pageField?.textContent)) {
-                console.log(1)
+            if (maxPage < Number(pageCount)) {
                 if (pageField) {
-                    if (pageField.textContent !== '1') {
-                        pageField.textContent = String(maxPage)
+                    if (pageCount !== 1) {
+                        pageCount = maxPage
                     }
                 }
             }
             if (pageField) {
-                const str = {
-                    limit: newLimit,
-                    page: pageField.textContent ?? '1',
-                }
-                const sp = new URLSearchParams(str)
-                this.router.setQueries(String(sp))
+                this.updateQuery(newLimit, String(pageCount) ?? '1')
             }
+            this.view.updateLimitAndPageFields(Number(pageCount), Number(newLimit))
             this.view.updateCart()
         })
         this.view.on('BUTTON_BUY_CLICK', () => {
@@ -119,5 +111,22 @@ export class CartController {
         this.view.on('SUCCESS_BUY', () => {
             this.view.successBuy()
         })
+        this.view.on('CART_CHANGE', async (article?: string) => {
+            const totalSum = await this.model.changeCart(article)
+            this.view.updateCartInformation(Number(totalSum))
+        })
+        this.view.on('CART_ITEM_CLICK', (article: string) => {
+            this.router.push(`item/${article}`)
+        })
+    }
+
+    updateQuery(limitCount: string, pageCount: string) {
+        const str = {
+            limit: limitCount,
+            page: pageCount,
+        }
+        const sp = new URLSearchParams(str)
+        this.router.setQueries(String(sp))
+        this.view.updateCart()
     }
 }

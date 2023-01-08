@@ -3,7 +3,7 @@ import type { AppModelInstance } from '../models/model'
 import itemTemplate from '@/templates/product_page.hbs'
 import { Item } from 'types/interfaces'
 
-type ItemViewEventsName = 'ITEM_BUTTON_CLICK' | 'ADD_TO_CART_CLICK' | 'CHECK_ITEM_IN_CART'
+type ItemViewEventsName = 'ITEM_BUTTON_CLICK' | 'ADD_TO_CART_CLICK' | 'CHECK_ITEM_IN_CART' | 'QUICK_BUY'
 
 export type ItemViewInstance = InstanceType<typeof ItemView>
 
@@ -69,6 +69,13 @@ export class ItemView extends EventEmitter {
                 this.emit('CHECK_ITEM_IN_CART', object.article)
             })
         }
+        const quickBuyButton = document.querySelector('.quickBuyButton')
+        if (quickBuyButton) {
+            quickBuyButton.addEventListener('click', () => {
+                this.emit('ADD_TO_CART_CLICK', object.article, true)
+                this.emit('QUICK_BUY', object.article, true)
+            })
+        }
         const dropMenu = document.querySelector('.drop-menu')
         if (dropMenu) {
             dropMenu.addEventListener('click', () => {
@@ -95,11 +102,11 @@ export class ItemView extends EventEmitter {
         }
     }
 
-    emit(event: ItemViewEventsName, article: number) {
-        return super.emit(event, article)
+    emit(event: ItemViewEventsName, article: number, isQuickBuy?: boolean) {
+        return super.emit(event, article, isQuickBuy)
     }
 
-    on(event: ItemViewEventsName, callback: (article: number) => void) {
+    on(event: ItemViewEventsName, callback: (article: number, isQuickBuy: boolean) => void) {
         return super.on(event, callback)
     }
 }

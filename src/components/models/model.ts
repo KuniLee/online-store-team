@@ -39,7 +39,6 @@ export class AppModel extends EventEmitter {
         if (!this.catalogItems.length) {
             try {
                 this.catalogItems = await getItems()
-                console.log(1)
             } catch (e) {
                 console.log('error', e)
             }
@@ -174,6 +173,49 @@ export class AppModel extends EventEmitter {
                 console.error(er)
             }
         }
+    }
+
+    async changeCart(articleToDelete?: string) {
+        if (this.catalogItems.length === 0) {
+            await this.getItems()
+        }
+        const cartItems = document.querySelectorAll('.cartItem')
+        const itemsLocalStorage = localStorage.getItem('cartArticles') ?? ''
+        let itemsArray = JSON.parse(itemsLocalStorage)
+        let totalPrice = 0
+        if (cartItems.length > 0) {
+            cartItems.forEach((el) => {
+                const element = el as HTMLElement
+                const itemArticle = Number(element.dataset.article)
+                const item = this.catalogItems.find((element) => element.article === itemArticle)
+                const count = el.querySelector('.countNumber')?.textContent
+                if (item && count) {
+                    totalPrice += item.price * Number(count)
+                    let indexToDelete = undefined
+                    for (let i = 0; i < itemsArray.length; i++) {
+                        if (articleToDelete) {
+                            if (itemsArray[i].article === Number(articleToDelete)) {
+                                indexToDelete = i
+                            }
+                        }
+                        if (itemsArray[i].article === itemArticle) {
+                            itemsArray[i].count =
+                                itemsArray[i].count === count ? Number(itemsArray[i].count) : Number(count)
+                        }
+                    }
+                    console.log(indexToDelete, articleToDelete)
+                    if (articleToDelete && indexToDelete !== undefined) {
+                        itemsArray.splice(indexToDelete, 1)
+                    }
+                }
+            })
+        } else {
+            itemsArray = []
+            localStorage.setItem('sumOfCart', String(0))
+        }
+        localStorage.setItem('cartArticles', JSON.stringify(itemsArray))
+        this.updateCartIcon()
+        return totalPrice
     }
 
     emit(
