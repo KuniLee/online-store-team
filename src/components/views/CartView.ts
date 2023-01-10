@@ -471,6 +471,13 @@ export class CartView extends EventEmitter {
         const allPromocodeBlocks = document.querySelectorAll('.promocodeBlock')
         const totalDiscountBlock = document.querySelector('.cartDiscount')
         const finalNumber = document.querySelector('.priceCart')
+        const items = document.querySelectorAll('.cartItem')
+        const countOfItems = document.querySelector('.itemsCount')
+        if (items && countOfItems) {
+            if (items.length !== Number(countOfItems.textContent)) {
+                countOfItems.textContent = String(items.length)
+            }
+        }
         let totalDiscountNumber = 0
         if (sumOfItemsBlock) {
             sumOfItemsBlock.textContent = String(sumOfItems)
