@@ -18,7 +18,7 @@ on:
 
 jobs:
 
-  lint:
+  Lint_and_tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -31,5 +31,6 @@ jobs:
         run: |
           npm install eslint
           npm run lint
-          
-          
+
+      - name: Tests
+        run: npm run test
