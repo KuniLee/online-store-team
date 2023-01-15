@@ -1,11 +1,8 @@
-import { CatalogView } from '@/components/views/CatalogView'
-import { Item } from 'types/interfaces'
-import {AppModel} from "@/components/models/model";
-import {AppView} from "@/components/views/AppView";
-import {LocalStorageMock} from "./localStorageMock";
+import { AppModel } from '@/components/models/model'
+import { LocalStorageMock } from './localStorageMock'
 
 const model = new AppModel()
-global.localStorage = new LocalStorageMock;
+global.localStorage = new LocalStorageMock()
 
 test('Should return true when item in localStorage', () => {
     expect(model.checkItemInCart(1295042)).toBe(true)
