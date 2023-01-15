@@ -176,7 +176,8 @@ export class CatalogView extends EventEmitter {
         }
 
         for (let i = 0; i < max; i++) {
-            cardContainer?.append(...this.createCard(i))
+            const item = this.filteredItems[i]
+            cardContainer?.append(this.createCard(item, i, this.model.checkItemInCart(item.article)))
         }
         if (!this.filteredItems.length) {
             cardContainer?.insertAdjacentHTML(
@@ -195,29 +196,30 @@ export class CatalogView extends EventEmitter {
             const last =
                 this.filteredItems.length >= this.shownCards + 10 ? this.shownCards + 10 : this.filteredItems.length
             for (let i = first; i < last; i++) {
-                cardContainer?.append(...this.createCard(i))
+                const item = this.filteredItems[i]
+                //console.log(this.createCard(item, i, this.model.checkItemInCart(item.article)))
+                cardContainer?.appendChild(this.createCard(item, i, this.model.checkItemInCart(item.article)))
                 this.shownCards++
             }
         }
     }
 
-    private createCard(idx: number) {
+    createCard(item: Item, idx: number, added: boolean): Node {
         const card = document.createElement('div')
-        const item = this.filteredItems[idx]
         if (this.settings.view === 'list') {
             card.innerHTML = cardTemplateList({
                 ...item,
-                added: this.model.checkItemInCart(item.article),
+                added,
             })
         } else
             card.innerHTML = cardTemplate({
                 ...item,
                 big: !((idx + 1) % 7),
-                added: this.model.checkItemInCart(item.article),
+                added,
             })
         const addTCartBtn = card.querySelector('.toCartBtn')
         addTCartBtn?.addEventListener('click', () => {
-            if (this.model.checkItemInCart(item.article)) {
+            if (added) {
                 addTCartBtn.lastElementChild?.classList.add('hidden')
                 addTCartBtn.firstElementChild?.classList.remove('hidden')
                 this.emit('REMOVE_ITEM_FROM_CART', item.article)
@@ -227,7 +229,7 @@ export class CatalogView extends EventEmitter {
                 this.emit('ADD_ITEM_TO_CART', item.article)
             }
         })
-        return card.childNodes
+        return card.firstChild as Node
     }
 
     private setFilters(search: string) {

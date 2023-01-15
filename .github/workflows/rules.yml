@@ -18,8 +18,11 @@ on:
 
 jobs:
 
-  lint:
+  Lint_and_tests:
     runs-on: ubuntu-latest
+    env:
+      BACK4APP_APP_ID: ${{ secrets.BACK4APP_APP_ID }}
+      BACK4APP_JS_KEY: ${{ secrets.BACK4APP_JS_KEY }}
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -31,5 +34,6 @@ jobs:
         run: |
           npm install eslint
           npm run lint
-          
-          
+
+      - name: Tests
+        run: npm run test
