@@ -1,0 +1,238 @@
+@import './style.base.css';
+@import './components.css';
+
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'HelveticaNeueCyr';
+    src: url('../assets/fonts/helveticaneuecyr_roman.otf');
+}
+
+@font-face {
+    font-family: 'Arial';
+    src: url('../assets/fonts/ArialMdm.ttf');
+}
+
+.stockRangeContainer,
+.stockPriceContainer{
+    display: grid;
+    grid-template-rows: max-content 10px;
+    overflow: hidden;
+    position: relative;
+    margin: 1em auto;
+    width: 120px;
+    background: linear-gradient(0deg, #ccc 10px, transparent 0);
+}
+.rangeStock,
+.rangePrice {
+    max-width: 100%;
+    -webkit-appearance: none;
+    background: none;
+    color: #000;
+    font: inherit;
+    margin: 0;
+    pointer-events: none;
+}
+.rangeStock::-webkit-slider-runnable-track,
+.rangePrice::-webkit-slider-runnable-track{
+    -webkit-appearance: none;
+    background: none;
+    height: 100%;
+    width: 100%;
+}
+.rangeStock::-moz-range-track,
+.rangePrice::-moz-range-track{
+    background: none;
+    height: 100%;
+    width: 100%;
+}
+.rangeStock::-webkit-slider-thumb,
+.rangePrice::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    cursor: pointer;
+    background: black;
+    border: none;
+    border-radius: 0;
+    pointer-events: auto;
+    width: 10px;
+    height: 10px;
+    padding: 5px;
+}
+.rangeStock::-moz-range-track,
+.rangePrice::-moz-range-track{
+    background: currentcolor;
+    border: none;
+    border-radius: 0;
+    pointer-events: auto;
+    width: 10px;
+    height: 10px;
+}
+
+.typesScroll::-webkit-scrollbar,
+.brandsScroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.typesScroll::-webkit-scrollbar-track,
+.brandsScroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.typesScroll::-webkit-scrollbar-thumb,
+.brandsScroll::-webkit-scrollbar-thumb {
+    background-color: gray;
+    border-radius: 10px;
+}
+
+.main-photo-container {
+    background-position: 50% 50%;
+}
+
+@layer base {
+    .modal-open {
+        left: 0 !important;
+    }
+
+    .modalForm {
+        max-width: 100%;
+    }
+
+    .modalGrid {
+        display: grid;
+        max-width: 612px;
+        gap: 10px;
+        grid-template-areas:
+                            'modalHead modalHead'
+                            'labelName inputName'
+                            'labelPhone inputPhone'
+                            'labelAddress inputAddress'
+                            'labelEmail inputEmail'
+                            'cardHead cardHead'
+                            'cardInfo cardInfo'
+                            'submitButton submitButton';
+        grid-template-columns: 200px 400px;
+    }
+
+    @media screen and (max-width: 720px) {
+        .modalGrid {
+            grid-template-areas:
+                'modalHead modalHead'
+                'labelName labelName'
+                'inputName inputName'
+                'labelPhone labelPhone'
+                'inputPhone inputPhone'
+                'labelAddress labelAddress'
+                'inputAddress inputAddress'
+                'labelEmail labelEmail'
+                'inputEmail inputEmail'
+                'cardHead cardHead'
+                'cardInfo cardInfo'
+                'submitButton submitButton';
+            align-items: center;
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    .modalNameInput {
+        grid-area: inputName;
+    }
+
+    .modalNameLabel {
+        grid-area: labelName;
+    }
+
+    .modalPhoneInput {
+        grid-area: inputPhone;
+    }
+
+    .modalPhoneLabel {
+        grid-area: labelPhone;
+    }
+
+    .modalAddressInput {
+        grid-area: inputAddress;
+    }
+
+    .modalAddressLabel {
+        grid-area: labelAddress;
+    }
+
+    .modalEmailInput {
+        grid-area: inputEmail;
+    }
+
+    .modalEmailLabel {
+        grid-area: labelEmail;
+    }
+
+    .modalHead {
+        grid-area: modalHead;
+    }
+
+    .modalCardHead {
+        grid-area: cardHead;
+    }
+
+    .cardInformation {
+        grid-area: cardInfo;
+    }
+
+    .modalSubmitButton {
+        grid-area: submitButton;
+    }
+
+    .modalNameInput:valid,
+    .modalEmailInput:valid,
+    .modalPhoneInput:valid,
+    .modalAddressInput:valid,
+    .modalCvvInput:valid,
+    .cardNumber:valid,
+    .cardData:valid {
+        border-color: rgba(0, 255, 0, 0.5);
+    }
+
+    input:focus {
+        outline: none;
+    }
+
+    .modalNameInput:invalid,
+    .modalEmailInput:invalid,
+    .modalPhoneInput:invalid,
+    .modalAddressInput:invalid,
+    .modalCvvInput:invalid,
+    .cardNumber:invalid,
+    .cardData:invalid {
+        border-color: rgba(255, 0, 0, 0.5);
+    }
+
+    .modalCvvInput {
+        -webkit-text-security: disc;
+    }
+
+    .modalCvvInput::-webkit-outer-spin-button,
+    .modalCvvInput::-webkit-inner-spin-button,
+    .cardNumber::-webkit-outer-spin-button,
+    .cardNumber::-webkit-inner-spin-button{
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .systemsSprite {
+        background: url('@/assets/images/bank-sprite.png') no-repeat;
+        background-size: cover;
+        background-position: 45px 0;
+    }
+
+    .systemsSprite.visa {
+        background-position: 3px 0;
+    }
+
+    .systemsSprite.masterCard {
+        background-position: -37px 0;
+    }
+
+    .systemsSprite.express {
+        background-position: -115px 0;
+    }
+}
